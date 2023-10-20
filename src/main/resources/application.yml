@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: #url de la db;
+    username: # username de la db;
+    password: # password de la db;
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    database.platform: org.hibernate.dialect.MySQLDialect
+  server:
+    port: 8080
+  logging:
+    level:
+      root: DEBUG
+      org.springframework.web: INFO
+      org.hibernate: ERROR
+    pattern:
+      console: %d{yyyy-MM-dd HH:mm:ss} [%highlight(%level)] [%cyan(%thread)] %yellow(%logger{15}) - %msg%n
