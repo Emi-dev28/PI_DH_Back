@@ -5,8 +5,8 @@ import com.PI_back.pi_back.model.Producto;
 import java.util.List;
 
 public interface IProductoService {
-    Producto registrarProducto(Producto producto);
-    void eliminarProducto(Producto producto);
+    void registrarProducto(Producto producto);
+    void eliminarProducto(Long id);
     List<Producto> listarProductos();
 
 }

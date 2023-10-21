@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ProductoServiceImpl implements IProductoService {
     private final Logger Logger = LoggerFactory.getLogger(ProductoServiceImpl.class);
@@ -23,27 +24,23 @@ public class ProductoServiceImpl implements IProductoService {
 
 
     @Override
-    public Producto registrarProducto(Producto producto) {
-        var productoABuscar = productoRepository.buscarPorNombre(producto.getNombre());
-        if(producto.getNombre().equals(productoABuscar)){
+    public void registrarProducto(Producto producto) {
+        if(productoRepository.buscarPorNombre(producto.getNombre()).isPresent()){
             Logger.info("El producto a designar con nombre '{}', ya se encuentra registrado", producto.getNombre());
             throw new NombreProductoYaExiste("El producto con nombre {}, ya se encuentra registrado en la base de datos", producto.getNombre());
         }else{
             productoRepository.save(producto);
             Logger.info("Se ha registrado un nuevo producto {}", producto);
         }
-
-
-        return null;
     }
 
     @Override
-    public void eliminarProducto(Producto producto) {
-
+    public void eliminarProducto(Long id) {
+        productoRepository.deleteById(id);
     }
 
     @Override
     public List<Producto> listarProductos() {
-        return null;
+        return productoRepository.findAll();
     }
 }

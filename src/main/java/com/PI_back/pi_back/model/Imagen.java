@@ -21,6 +21,8 @@ public class Imagen {
     @Column(name = "Nombre")
     private String nombre;
     private String descripcion;
+    private String imagenUrl;
+    private String imagenId;
     private MultipartFile file;
 
 
