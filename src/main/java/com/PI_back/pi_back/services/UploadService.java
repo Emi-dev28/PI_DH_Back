@@ -7,5 +7,6 @@ import java.io.IOException;
 
 public interface UploadService {
     String uploadFile(MultipartFile multipartFile) throws IOException, RuntimeException;
+    String uploadFilePublicId(MultipartFile multipartFile);
 
 }

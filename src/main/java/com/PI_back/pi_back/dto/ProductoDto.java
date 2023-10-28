@@ -1,19 +1,22 @@
 package com.PI_back.pi_back.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.PI_back.pi_back.model.Category;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Getter
+@Setter
 public class ProductoDto {
 
     // todo: chequear notaciones en entidades, services y repository.
-    private String nombre;
-    private String descripcion;
+    private String name;
+    private String description;
+    private double price;
+    private int quantity;
+    private Category category;
     private String stock;
 
 }

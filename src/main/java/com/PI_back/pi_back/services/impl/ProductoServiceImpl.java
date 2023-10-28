@@ -5,6 +5,7 @@ import com.PI_back.pi_back.exceptions.NombreProductoYaExiste;
 import com.PI_back.pi_back.model.Producto;
 import com.PI_back.pi_back.repository.ProductoRepository;
 import com.PI_back.pi_back.services.IProductoService;
+import com.PI_back.pi_back.services.ImagenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class ProductoServiceImpl implements IProductoService {
 
     @Autowired
     private final ProductoRepository productoRepository;
+    private ImagenService imagenService;
 
     @Autowired
     public ProductoServiceImpl(ProductoRepository productoRepository) {
@@ -39,6 +41,8 @@ public class ProductoServiceImpl implements IProductoService {
         }else{
             productoRepository.save(producto);
             Logger.info("Se ha registrado un nuevo producto {}", producto);
+
+
         }
         return producto;
     }

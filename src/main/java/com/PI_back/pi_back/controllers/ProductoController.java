@@ -13,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/productos")
@@ -32,7 +35,7 @@ public class ProductoController {
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
 
     @GetMapping
-    public ResponseEntity<List<Producto>> listarProductos(){
+    public ResponseEntity<List<Producto>> listOfProducts(){
         logger.info("los productos a listar son: {}", productoService.listarProductos());
         return ResponseEntity.ok(productoService.listarProductos());
     }
@@ -40,14 +43,17 @@ public class ProductoController {
 
     // todo: resolver el id de las imagenes que se muestran en null.
     @PostMapping("/registrar")
-    public ResponseEntity<Producto> registrarProducto(ProductoDto producto, List<MultipartFile> multipartFiles){
+    public ResponseEntity<Producto> productsRegistry(ProductoDto producto, List<MultipartFile> multipartFiles){
         try{
-            Producto producto1 = new Producto(producto.getNombre(),producto.getDescripcion(),null, producto.getStock());
-            List<Imagen> listaDeImagenes = new ArrayList<>();
+            // mediante el producto, nos llega el dto, que contiene nombre, descripcion y stock. Se crea un Producto para persistir en la base de datos
+            // Se crea una lista de imagenes para luego añadirle objetos de tipo imagen
+            Producto producto1 = new Producto(producto.getName(),producto.getDescription(), producto.getPrice(),producto.getQuantity(), producto.getCategory(), 0.0,null , producto.getStock());
+            Set<Imagen> listaDeImagenes = new HashSet<>();
             for(MultipartFile imagen : multipartFiles){
                 var urlImg = uploadServiceImplement.uploadFile(imagen);
                 Imagen imagen1 = new Imagen(urlImg,producto1);
                 listaDeImagenes.add(imagen1);
+                imagenService.registrarImagen(imagen1);
             }
             producto1.setImagenes(listaDeImagenes);
             logger.info("El producto a guardar es" + producto1);
@@ -60,10 +66,15 @@ public class ProductoController {
         return ResponseEntity.badRequest().build();
     }
 
-
+    @Transactional
     @DeleteMapping("/eliminar/{id}")
     public void eliminarProducto(@PathVariable Long id){
-    productoService.eliminarProducto(id);
+        var productoABuscar = productoService.buscarPorId(id);
+        var imagenesAEliminar = productoABuscar.getImagenes();
+        for (Imagen img : imagenesAEliminar) {
+            imagenService.deleteImagen(img.getId());
+        }
+        productoService.eliminarProducto(id);
     }
 
 

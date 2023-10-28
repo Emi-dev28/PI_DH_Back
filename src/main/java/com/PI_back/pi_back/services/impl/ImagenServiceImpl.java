@@ -6,6 +6,7 @@ import com.PI_back.pi_back.services.ImagenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -21,11 +22,17 @@ public class ImagenServiceImpl implements ImagenService {
 
     @Override
     public List<Imagen> listarImagen() {
-        return null;
+        return imagenRepository.findAll();
     }
 
     @Override
-    public Imagen registrarImagen(Imagen imagen) {
-        return  imagenRepository.save(imagen);
+    public void registrarImagen(Imagen imagen) {
+         imagenRepository.save(imagen);
+    }
+
+    @Transactional
+    @Override
+    public void deleteImagen(Long id) {
+        imagenRepository.deleteById(id);
     }
 }

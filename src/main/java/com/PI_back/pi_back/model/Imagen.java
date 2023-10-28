@@ -4,6 +4,8 @@ package com.PI_back.pi_back.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "IMAGENES")
@@ -12,19 +14,19 @@ import lombok.*;
 public class Imagen {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "imagenUrl")
+    @Column(name = "imagen_url")
 
-    private String imagenUrl;
-    //@Column(name = "imagenId")
+    private String imageUrl;
 
-   // private String imagenId;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "producto_id")
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Transient
     private Producto producto;
 //    @ManyToOne()
 //    @JoinColumn(name = "files")
@@ -32,13 +34,13 @@ public class Imagen {
 
 
 
-    public Imagen(String imagenUrl, Producto producto) {
-        this.imagenUrl = imagenUrl;
+    public Imagen(String imageUrl, Producto producto) {
+        this.imageUrl = imageUrl;
         this.producto = producto;
     }
 
     public Imagen(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
+        this.imageUrl = imagenUrl;
     }
 
     public Imagen() {
@@ -53,11 +55,11 @@ public class Imagen {
     }
 
     public String getImagenUrl() {
-        return imagenUrl;
+        return imageUrl;
     }
 
     public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
+        this.imageUrl = imagenUrl;
     }
 
     @JsonBackReference
