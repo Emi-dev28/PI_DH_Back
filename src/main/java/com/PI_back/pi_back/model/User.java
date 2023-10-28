@@ -1,4 +1,4 @@
 package com.PI_back.pi_back.model;
 
-public class User {
+public class User implements u {
 }

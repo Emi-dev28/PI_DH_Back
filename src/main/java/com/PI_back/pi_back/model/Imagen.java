@@ -3,7 +3,6 @@ package com.PI_back.pi_back.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -27,16 +26,16 @@ public class Imagen {
     @JsonBackReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Transient
-    private Producto producto;
+    private Product product;
 //    @ManyToOne()
 //    @JoinColumn(name = "files")
 
 
 
 
-    public Imagen(String imageUrl, Producto producto) {
+    public Imagen(String imageUrl, Product product) {
         this.imageUrl = imageUrl;
-        this.producto = producto;
+        this.product = product;
     }
 
     public Imagen(String imagenUrl) {
@@ -63,12 +62,12 @@ public class Imagen {
     }
 
     @JsonBackReference
-    public Producto getProducto() {
-        return producto;
+    public Product getProducto() {
+        return product;
     }
 
     @JsonBackReference
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProducto(Product product) {
+        this.product = product;
     }
 }

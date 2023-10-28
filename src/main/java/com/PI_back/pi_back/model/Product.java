@@ -4,18 +4,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @Table(name = "Producto")
 @Entity
-public class Producto {
+public class Product {
    // todo: mappear las relaciones
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +47,7 @@ public class Producto {
     private String stock;
 
 
- public Producto(String name, String description, double price, int quantity, Category category, double rating, Set<Imagen> imagenes, String stock) {
+ public Product(String name, String description, double price, int quantity, Category category, double rating, Set<Imagen> imagenes, String stock) {
   this.name = name;
   this.description = description;
   this.price = price;

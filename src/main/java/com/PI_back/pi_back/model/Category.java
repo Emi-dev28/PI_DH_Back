@@ -29,6 +29,6 @@ public class Category {
     @ManyToMany
     @JoinColumn(name = "producto_id")
     // El set te permite asegurarte que cada item es unico en la lista
-    private Set<Producto> productList = new HashSet<>();
+    private Set<Product> productList = new HashSet<>();
 
 }
