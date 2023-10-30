@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +63,6 @@ public class ProductoController {
         return ResponseEntity.badRequest().build();
     }
 
-    @Transactional
     @DeleteMapping("/eliminar/{id}")
     public void deleteProduct(@PathVariable Long id){
         var productoABuscar = productoService.searchById(id);

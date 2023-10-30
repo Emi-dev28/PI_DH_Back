@@ -1,8 +1,8 @@
 package com.PI_back.pi_back.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sun.istack.NotNull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
@@ -18,22 +18,22 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "NOMBRE")
-    @NotNull
+    @NotBlank
     private String name;
 
     @Column(name = "DESCRIPCION")
     private String description;
 
     @Column(name = "precio")
-    @NotNull
+    @NotBlank
     private double price;
     @Column(name = "CANTIDAD")
-    @NotNull
+    @NotBlank
     private int quantity;
     @Column(name = "CATEGORIA")
-    @NotNull
+    @NotBlank
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Category category;
+    private Set<Category> category;
     @Column(name = "RATING")
     private double rating;
 
@@ -52,7 +52,7 @@ public class Product {
   this.description = description;
   this.price = price;
   this.quantity = quantity;
-  this.category = category;
+  this.category = new HashSet<>();
   this.rating = rating;
   this.imagenes = imagenes;
   this.stock = stock;

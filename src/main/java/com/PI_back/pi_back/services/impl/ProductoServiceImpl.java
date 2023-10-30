@@ -33,7 +33,7 @@ public class ProductoServiceImpl implements IProductoService {
     @Override
     public void productRegistry(Product product) throws Exception {
         Logger.info("el nombre del producto a registrar es: {}", product);
-        if(productoRepository.buscarPorNombre(product.getName()).isPresent()){
+        if(productoRepository.searchByName(product.getName()).isPresent()){
             Logger.info("El producto a designar con nombre '{}', ya se encuentra registrado", product.getName());
             throw new Exception("El nombre del producto ingresado ya se encuentra registrado en la base de datos");
         }else{

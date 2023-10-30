@@ -1,7 +1,12 @@
 package com.PI_back.pi_back.model;
 
-import com.sun.istack.NotNull;
+import com.PI_back.pi_back.utils.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,28 +16,36 @@ import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
+@Data
+@Builder
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(name = "firstname")
     @NotNull
     private String firstname;
-
+    @NotBlank
+    @Size(max = 50)
     @Column(name = "lastname")
     @NotNull
     private String lastname;
-
+    @NotBlank
     @Column(name = "password")
-    @NotNull
     private String password;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(name = "username")
     private String username;
 
     @Column(name= "email")
-    @NotNull
+    @NotBlank
+    @Size(max = 120)
     private String email;
 
     @Column(name = "terms")
@@ -43,7 +56,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role rol;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
 
 

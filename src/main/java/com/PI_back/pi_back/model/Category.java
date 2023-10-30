@@ -1,7 +1,9 @@
 package com.PI_back.pi_back.model;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -12,22 +14,23 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
+
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "NOMBRE")
-    @NotNull
+    @NotBlank
     private String name;
 
-
-    private SubCategory subCategory;
+    @OneToMany(mappedBy = "category")
+    @JsonManagedReference
+    private Set<SubCategory> subCategory;
 
 
     @ManyToMany
-    @JoinColumn(name = "producto_id")
     // El set te permite asegurarte que cada item es unico en la lista
     private Set<Product> productList = new HashSet<>();
 

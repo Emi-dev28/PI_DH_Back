@@ -6,7 +6,6 @@ import com.PI_back.pi_back.services.ImagenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -30,7 +29,6 @@ public class ImagenServiceImpl implements ImagenService {
          imagenRepository.save(imagen);
     }
 
-    @Transactional
     @Override
     public void deleteImagen(Long id) {
         imagenRepository.deleteById(id);
