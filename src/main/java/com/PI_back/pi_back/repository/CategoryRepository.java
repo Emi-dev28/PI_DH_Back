@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("DELETE c FROM Category c where c.name = :name")
-    Category deleteByName(@Param("name") String name);
+    @Query("DELETE FROM Category c WHERE c.name = :name")
+    void deleteByName(@Param("name") String name);
 
     @Query("SELECT c FROM Category c WHERE c.name = :name")
     Optional<Product> searchByName(@Param("name") String name);

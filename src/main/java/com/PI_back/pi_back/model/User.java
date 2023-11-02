@@ -12,7 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "USERS")
@@ -62,8 +64,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(rol.name());
-        return Collections.singletonList(grantedAuthority);
+        List<GrantedAuthority> authorities = rol.getPermissions()
+                .stream().map(permission -> new SimpleGrantedAuthority(permission.name()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("Role_" + rol.name()));
+        return authorities;
     }
 
     @Override

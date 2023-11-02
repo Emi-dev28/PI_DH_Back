@@ -1,5 +1,6 @@
-package com.PI_back.pi_back.security;
+package com.PI_back.pi_back.security.filter;
 
+import com.PI_back.pi_back.security.JwtServiceImplement;
 import com.PI_back.pi_back.services.impl.UserServiceImplement;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-    @Override
+    @Override // Se asegura que una peticion solo sea procesada una sola vez. Si es repetida, no la procesa.
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -42,16 +43,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(request.getServletPath().contains("api/v1/auth")){
             filterChain.doFilter(request,response);return;
         }
+
+        // 1.- Obtener el header;
         final String authenticationHeader = request.getHeader("Authorization");
+        // 2.- Obtener el jwt del header;
+        // 3.- Obtener el subject/username desde el jwt;
         String jwt;
-        String username = "";
-        if(authenticationHeader == null || !authenticationHeader.startsWith("Bearer")){
+        String username;
+        if(authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
-        // Retorna el jwt, corta la primera parte que seria el "Bearer"
         jwt = authenticationHeader.substring(7);
         username = jwtServiceImplement.extractUsername(jwt);
+        // 4. Settear un objeto Authentication dentro del Security context holder.
+
+        // Retorna el jwt, corta la primera parte que seria el "Bearer"
+
         // todo ; para chequear que el usuario ya esta conectado o authenticado, esta el objeto SecurityContextHolder
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
@@ -59,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userService.UserDetailsService().loadUserByUsername(username);
             if (jwtServiceImplement.isTokenValid(jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
+                        username,
                         null,
                         userDetails.getAuthorities()
                 );

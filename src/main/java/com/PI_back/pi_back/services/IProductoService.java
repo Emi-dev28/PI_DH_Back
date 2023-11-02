@@ -12,4 +12,7 @@ public interface IProductoService {
     Product searchById(Long id);
 
 
+
+
+    void updateById(Long id, Product product);
 }

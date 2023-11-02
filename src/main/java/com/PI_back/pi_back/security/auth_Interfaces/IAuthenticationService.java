@@ -9,7 +9,7 @@ import com.PI_back.pi_back.dto.UserDto;
 import java.util.List;
 
 public interface IAuthenticationService {
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationResponse login(AuthenticationRequest request);
     AuthenticationResponse register(RegisterRequest register);
     List<UserDto> authenticatedUsers();
 }

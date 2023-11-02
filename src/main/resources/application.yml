@@ -33,7 +33,7 @@ application:
   security:
     jwt:
       secret-key: puquDyskCdV1bq37TEQX5SQIUag+2G/XuffTDonL4C4=
-      expiration: 86400000 # a day
+      expiration: 24 # a day
       refresh:
         expiration: 604800000 # 7 days
   jwt-refresh-expiration-milliseconds: 120000

@@ -28,7 +28,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -62,20 +64,22 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse login(AuthenticationRequest request) {
         // todo; el authenticate toma un objeto UsernamePasswordAuthenticationToken y recibe el username y password
         logger.info("Lo que llega de la request es {}", request);
         logger.info("el Username y la password con la que se va a armar el UsernamePasswordAuthenticationToken son {} {}", request.getEmail(),request.getPassword());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword())
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
+                request.getPassword()
         );
+
+        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         // todo; buscando el user
+
         var user = userRepository.searchByEmail(request.getEmail())
                 .orElseThrow( () -> new UsernameNotFoundException("User not found"));
         logger.info("Se encuentro o no se encontro? {}", user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user, generateExtraClaim(user));
         logger.info("Se genero el token {}", jwtToken);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -83,6 +87,14 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken).refreshToken(refreshToken)
                 .build();
+    }
+
+    private Map<String, Object> generateExtraClaim(User user) {
+        Map<String, Object> extraClaims= new HashMap<>();
+        extraClaims.put("name", user.getFirstname());
+        extraClaims.put("role", user.getRol().name());
+        extraClaims.put("permissions", user.getAuthorities());
+        return extraClaims;
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -120,7 +132,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .rol(register.getRole())
                 .build();
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user, generateExtraClaim(user));
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -155,7 +167,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
             var user = userRepository.searchByEmail(userEmail)
                     .orElseThrow(() ->  new UsernameNotFoundException("User not found"));
             if(jwtService.isTokenValid(refreshToken, user)){
-                var accesToken = jwtService.generateToken(user);
+                var accesToken = jwtService.generateToken(user, generateExtraClaim(user));
                 revokeAllUserTokens(user);
                 saveUserToken(user, accesToken);
                 var authResponse = AuthenticationResponse.builder()

@@ -4,6 +4,9 @@ package com.PI_back.pi_back.dto;
 import com.PI_back.pi_back.model.Category;
 import lombok.*;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +19,8 @@ public class ProductoDto {
     private String description;
     private double price;
     private int quantity;
-    private Category category;
+    private Set<Category> category;
     private String stock;
+    private List<String> characteristics;
 
 }

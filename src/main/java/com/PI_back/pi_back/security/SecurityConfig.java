@@ -1,5 +1,7 @@
 package com.PI_back.pi_back.security;
 
+import com.PI_back.pi_back.security.filter.JwtAuthenticationFilter;
+import com.PI_back.pi_back.utils.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,20 +35,50 @@ public class SecurityConfig extends WebSecurityConfiguration {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
+        // csrf: Es una vulnerabilidad web, Cross Site Request Forgery. Se deshabilita porque nosotros usamos Jwts.
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/v1/auth/register").permitAll()
-                                .requestMatchers("/api/v1/auth/authenticate").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/v1/auth/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                                .anyRequest()
-                                .authenticated()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> {
+                            auth.requestMatchers("/api/v1/auth/**").permitAll();
+                            auth.requestMatchers("/api/v1/auth/**").permitAll();
+                            auth.requestMatchers("/error").permitAll();
+                            // todo: especificaciones de acceso segun url para manipular los Productos.
+                            // para traer la lista de productos se requiere ser USER
+                            auth.requestMatchers(HttpMethod.GET, "/api/v1/productos")
+                                    .hasAuthority(Permissions.READ_ALL_PRODUCTS.name());
+                            // para registrar un producto se requiere ser admin
+                            auth.requestMatchers(HttpMethod.POST, "/api/v1/productos/registrar")
+                                    .hasAuthority(Permissions.SAVE_PRODUCT.name());
+                            auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/añadir-caracteristica/{id}")
+                                            .hasAuthority(Permissions.SAVE_PRODUCT.name());
+                            auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/update/{id}")
+                                            .hasAuthority(Permissions.UPDATE_PRODUCT.name());
+                            auth.requestMatchers(HttpMethod.DELETE, "/api/v1/productos/eliminar/{id}")
+                                            .hasAuthority(Permissions.DELETE_PRODUCT.name());
+                            auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/asignarle-categoria/{id}")
+                                    .hasAuthority(Permissions.SAVE_CATEGORY.name());
+                            // para dar rol administrador a un user se requiere ser admin
+                            // todo: especificaciones de acceso segun url para manipular el rol Admin.
+                            auth.requestMatchers(HttpMethod.POST ,"api/v1/admin/give-admin")
+                                    .hasAuthority(Permissions.GIVE_ADMIN.name());
+                            // todo: especificaciones de acceso segun url para manipular las categorias.
+                            auth.requestMatchers(HttpMethod.GET, "/api/v1/categorias")
+                                            .hasAuthority(Permissions.READ_ALL_CATEGORIES.name());
+                            auth.requestMatchers(HttpMethod.POST, "/api/v1/categories/registrar")
+                                            .hasAuthority(Permissions.SAVE_CATEGORY.name());
+                            auth.requestMatchers(HttpMethod.DELETE, "/api/v1/categories/eliminar/{id}")
+                                            .hasAuthority(Permissions.SAVE_CATEGORY.name());
+
+
+                            auth.anyRequest().denyAll();
+                        }
                         )
                 .sessionManagement(session -> session
+                        // la sesion no tiene estado
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .logout(logout -> logout.logoutUrl("api/v1/auth/logout"));
 
         return httpSecurity.build();

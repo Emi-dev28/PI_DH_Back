@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +25,17 @@ public class Category {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    @JsonManagedReference
-    private Set<SubCategory> subCategory;
+  //  @OneToMany(mappedBy = "category")
+    //@JsonManagedReference
+    //private Set<SubCategory> subCategory;
 
 
     @ManyToMany
     // El set te permite asegurarte que cada item es unico en la lista
     private Set<Product> productList = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "imagen_id")
+    private Imagen img;
 
 }

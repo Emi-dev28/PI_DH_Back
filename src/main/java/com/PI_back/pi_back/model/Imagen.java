@@ -30,6 +30,8 @@ public class Imagen {
 //    @ManyToOne()
 //    @JoinColumn(name = "files")
 
+    @OneToOne(mappedBy = "img")
+    private Category category;
 
 
 

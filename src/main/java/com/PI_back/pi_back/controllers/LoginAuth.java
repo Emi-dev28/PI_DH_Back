@@ -6,9 +6,7 @@ import com.PI_back.pi_back.dto.RegisterRequest;
 import com.PI_back.pi_back.security.AuthenticationServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,7 +35,7 @@ public class LoginAuth {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest authRequest
             ){
-        return ResponseEntity.ok(authenticationServiceImplement.authenticate(authRequest));
+        return ResponseEntity.ok(authenticationServiceImplement.login(authRequest));
     }
     @PostMapping("refresh-token")
     public void refreshToken(

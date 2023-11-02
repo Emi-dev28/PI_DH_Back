@@ -2,6 +2,7 @@ package com.PI_back.pi_back.security;
 
 import com.PI_back.pi_back.security.auth_Interfaces.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -40,8 +41,8 @@ public class JwtServiceImplement implements JwtService {
 
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
+        return generateToken(extraClaims, userDetails);
 
     }
 
@@ -71,10 +72,11 @@ public class JwtServiceImplement implements JwtService {
             long refreshExpiration
     ){
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setClaims(extraClaims) // le setteo el cuerpo del token
+                .setSubject(userDetails.getUsername()) // le setteo las propiedades
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + (expiration * 60 * 1000)))
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

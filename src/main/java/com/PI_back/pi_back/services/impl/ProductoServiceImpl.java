@@ -67,4 +67,16 @@ public class ProductoServiceImpl implements IProductoService {
     }
     return productABuscar;
     }
+
+    @Override
+    public void updateById(Long id, Product product) {
+        var list = listProduct();
+        for(int i = 0; i < list.size() ;i++ ){
+          Product p = list.get(i);
+          if(p.getId().equals(id)){
+              list.set(i, product);
+              return;
+          }
+        }
+    }
 }
