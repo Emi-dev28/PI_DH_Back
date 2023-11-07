@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @Table(name = "USERS")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,27 +34,28 @@ public class User implements UserDetails {
     @Column(name = "firstname")
     @NotNull
     private String firstname;
+
     @NotBlank
     @Size(max = 50)
     @Column(name = "lastname")
     @NotNull
     private String lastname;
+
     @NotBlank
     @Column(name = "password")
     private String password;
-
+/*
     @NotBlank
     @Size(max = 50)
     @Column(name = "username")
     private String username;
-
+*/
     @Column(name= "email")
     @NotBlank
     @Size(max = 120)
     private String email;
 
     @Column(name = "terms")
-    @NotNull
     private boolean terms;
 
     @Column(name = "role")
@@ -79,7 +83,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

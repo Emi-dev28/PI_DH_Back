@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
                                             .hasAuthority(Permissions.SAVE_CATEGORY.name());
 
 
-                            auth.anyRequest().denyAll();
+                            auth.anyRequest().permitAll();
                         }
                         )
                 .sessionManagement(session -> session

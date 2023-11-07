@@ -10,7 +10,7 @@ import java.util.List;
 
 public enum Role {
     USER(Arrays.asList(Permissions.READ_ALL_PRODUCTS, Permissions.READ_ALL_CATEGORIES)),
-    AMIN(Arrays.asList(
+    ADMIN(Arrays.asList(
             Permissions.READ_ALL_PRODUCTS,
             Permissions.SAVE_PRODUCT,
             Permissions.SAVE_CATEGORY,
