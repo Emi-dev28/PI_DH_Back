@@ -107,7 +107,6 @@ public class ProductoController {
     @PutMapping("/update/{id}")
     public void updateById(@PathVariable Long id, @RequestBody Product product){
         productoService.updateById(id,product);
-    ;
     }
     @PutMapping("/añadir-caracteristica/{id}")
     public void setCharacteristic(@PathVariable Long id, String characteristic){

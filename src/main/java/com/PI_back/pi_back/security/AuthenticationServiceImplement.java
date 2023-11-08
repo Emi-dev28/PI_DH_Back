@@ -66,11 +66,10 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .builder()
                 .firstname(register.getName())
                 .lastname(register.getLastname())
-                //.username(register.getUsername())
                 .password(passwordEncoder.encode(register.getPassword()))
                 .email(register.getEmail())
                 .terms(register.isTerms())
-                .rol(register.getRole())
+                .rol(register.getRol())
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

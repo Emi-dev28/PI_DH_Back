@@ -59,8 +59,8 @@ public class User implements UserDetails {
     private boolean terms;
 
     @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Role rol;
+    //@Enumerated(EnumType.STRING)
+    private String rol;
 
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
@@ -68,18 +68,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = rol.getPermissions()
-                .stream().map(permission -> new SimpleGrantedAuthority(permission.name()))
-                .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("Role_" + rol.name()));
-        return authorities;
+        return null;
     }
 
     @Override
     public String getPassword() {
         return password;
     }
-
 
     @Override
     public String getUsername() {

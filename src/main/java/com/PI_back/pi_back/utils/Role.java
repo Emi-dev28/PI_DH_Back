@@ -20,7 +20,6 @@ public enum Role {
 
     private List<Permissions> permissions;
 
-
     public List<Permissions> getPermissions() {
         return permissions;
     }
@@ -28,4 +27,6 @@ public enum Role {
     public void setPermissions(List<Permissions> permissions) {
         this.permissions = permissions;
     }
+
+
 }

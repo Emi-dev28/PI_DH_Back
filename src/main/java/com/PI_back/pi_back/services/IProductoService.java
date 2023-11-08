@@ -8,11 +8,6 @@ public interface IProductoService {
     void productRegistry(Product product) throws Exception;
     void deleteProduct(Long id);
     List<Product> listProduct();
-
     Product searchById(Long id);
-
-
-
-
     void updateById(Long id, Product product);
 }

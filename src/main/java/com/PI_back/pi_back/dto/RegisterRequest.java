@@ -29,5 +29,6 @@ public class RegisterRequest {
     @NotBlank
     private boolean terms;
     @NotBlank
-    private Role role;
+    private String rol;
+
 }
