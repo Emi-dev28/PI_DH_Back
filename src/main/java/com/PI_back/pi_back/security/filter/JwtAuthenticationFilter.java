@@ -26,8 +26,8 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-     private final JwtServiceImplement jwtServiceImplement;
-     private final UserServiceImplement userService;
+     private JwtServiceImplement jwtServiceImplement;
+     private UserServiceImplement userService;
 
     @Autowired
     public JwtAuthenticationFilter(JwtServiceImplement jwtServiceImplement, UserServiceImplement userService) {
@@ -40,9 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().contains("api/v1/auth")){
-            filterChain.doFilter(request,response);return;
-        }
+
 
         // 1.- Obtener el header;
         final String authenticationHeader = request.getHeader("Authorization");
@@ -64,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             // todo: una vez que el usuario no esta conectado, lo que se hace es chequear el usuario de la base de datos
-            UserDetails userDetails = this.userService.UserDetailsService().loadUserByUsername(username);
+            UserDetails userDetails = userService.UserDetailsService().loadUserByUsername(username);
             if (jwtServiceImplement.isTokenValid(jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         username,

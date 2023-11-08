@@ -41,7 +41,11 @@ public class SecurityConfig extends WebSecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                             auth.requestMatchers("/api/v1/auth/**").permitAll();
                             auth.requestMatchers("/api/v1/auth/**").permitAll();
+                            auth.requestMatchers("/api/v1/auth/authenticate").permitAll();
+                            auth.requestMatchers("/api/v1/productos").permitAll();
+                            auth.requestMatchers("/api/v1/productos/registrar").permitAll();
                             auth.requestMatchers("/error").permitAll();
+                            auth.requestMatchers("/api/v1/categorias/registrar").permitAll();
                             // todo: especificaciones de acceso segun url para manipular los Productos.
                             // para traer la lista de productos se requiere ser USER
                             auth.requestMatchers(HttpMethod.GET, "/api/v1/productos")
@@ -68,9 +72,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
                                             .hasAuthority(Permissions.SAVE_CATEGORY.name());
                             auth.requestMatchers(HttpMethod.DELETE, "/api/v1/categories/eliminar/{id}")
                                             .hasAuthority(Permissions.SAVE_CATEGORY.name());
-
-
-                            auth.anyRequest().denyAll();
+                            auth.anyRequest().permitAll();
                         }
                         )
                 .sessionManagement(session -> session

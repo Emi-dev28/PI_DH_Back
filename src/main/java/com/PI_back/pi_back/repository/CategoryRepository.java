@@ -16,5 +16,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     void deleteByName(@Param("name") String name);
 
     @Query("SELECT c FROM Category c WHERE c.name = :name")
-    Optional<Product> searchByName(@Param("name") String name);
+    Optional<Category> searchByName(@Param("name") String name);
 }
