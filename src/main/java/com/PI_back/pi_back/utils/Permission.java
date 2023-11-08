@@ -1,6 +1,9 @@
 package com.PI_back.pi_back.utils;
 
-public enum Permissions {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+public enum Permission {
     READ_ALL_PRODUCTS,
     SAVE_PRODUCT,
     SAVE_CATEGORY,

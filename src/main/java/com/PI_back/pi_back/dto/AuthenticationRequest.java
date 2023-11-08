@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 
 public class AuthenticationRequest {
-    private String username;
+    private String email;
     private String password;
 }

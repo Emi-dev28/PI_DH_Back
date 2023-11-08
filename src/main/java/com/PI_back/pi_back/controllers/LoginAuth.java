@@ -38,11 +38,10 @@ public class LoginAuth {
         return ResponseEntity.ok(authenticationServiceImplement.login(authRequest));
     }
     @PostMapping("refresh-token")
-    public void refreshToken(
+    public ResponseEntity<AuthenticationResponse> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
-    ) throws IOException
-    {
-        authenticationServiceImplement.refreshToken(request,response);
+    ) throws IOException {
+        return ResponseEntity.ok(authenticationServiceImplement.refreshToken(request,response));
     }
 }

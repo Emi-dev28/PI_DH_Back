@@ -4,16 +4,13 @@ import com.PI_back.pi_back.dto.AuthenticationRequest;
 import com.PI_back.pi_back.dto.AuthenticationResponse;
 import com.PI_back.pi_back.dto.RegisterRequest;
 import com.PI_back.pi_back.dto.UserDto;
-import com.PI_back.pi_back.exceptions.UserAlreadyRegisteredException;
 import com.PI_back.pi_back.model.Token;
 import com.PI_back.pi_back.model.User;
 import com.PI_back.pi_back.repository.TokenRepository;
 import com.PI_back.pi_back.repository.UserRepository;
 import com.PI_back.pi_back.security.auth_Interfaces.IAuthenticationService;
 import com.PI_back.pi_back.security.auth_Interfaces.JwtService;
-import com.PI_back.pi_back.utils.Role;
 import com.PI_back.pi_back.utils.TokenType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
@@ -30,9 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -66,23 +61,20 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse login(AuthenticationRequest request) {
-        // todo; el authenticate toma un objeto UsernamePasswordAuthenticationToken y recibe el username y password
-        logger.info("Lo que llega de la request es {}", request);
-        logger.info("el Username y la password con la que se va a armar el UsernamePasswordAuthenticationToken son {} {}", request.getUsername(),request.getPassword());
-
-
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
-        // todo; buscando el user
-
-        var user = userRepository.searchByUsername(request.getUsername())
-                .orElseThrow( () -> new UsernameNotFoundException("User not found"));
-        logger.info("Se encuentro o no se encontro? {}", user);
-        var jwtToken = jwtService.generateToken(user, generateExtraClaim(user));
-        logger.info("Se genero el token {}", jwtToken);
+    public AuthenticationResponse register(RegisterRequest register) {
+        User user = User
+                .builder()
+                .firstname(register.getName())
+                .lastname(register.getLastname())
+                .password(passwordEncoder.encode(register.getPassword()))
+                .email(register.getEmail())
+                .terms(register.isTerms())
+                .rol(register.getRol())
+                .build();
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-      //  revokeAllUserTokens(user);
-       // saveUserToken(user, jwtToken);
+        saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refreshToken(refreshToken)
@@ -92,7 +84,34 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .role(user.getRol())
                 .build();
     }
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        // todo el authenticate toma un objeto UsernamePasswordAuthenticationToken y recibe el username y password
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
+                request.getPassword()
+        );
 
+        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        var user = userRepository.searchByEmail(request.getEmail())
+                .orElseThrow( () -> new UsernameNotFoundException("User not found"));
+        var jwtToken = jwtService.generateToken(user);
+        logger.info("Se generó el token {}", jwtToken);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return AuthenticationResponse.builder()
+                .token(jwtToken).refreshToken(refreshToken)
+                .refreshToken(refreshToken)
+                .email(user.getEmail())
+                .name(user.getFirstname())
+                .lastname(user.getLastname())
+                .role(user.getRol())
+                .build();
+    }
+
+    /*
     private Map<String, Object> generateExtraClaim(User user) {
         Map<String, Object> extraClaims= new HashMap<>();
         extraClaims.put("name", user.getFirstname());
@@ -100,6 +119,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
         extraClaims.put("permissions", user.getAuthorities());
         return extraClaims;
     }
+    */
 
     private void saveUserToken(User user, String jwtToken) {
         var token = Token
@@ -117,85 +137,52 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())return;
         validUserTokens.forEach(token -> {
-        token.setExpired(true);
-        token.setRevoked(true);
+            token.setExpired(true);
+            token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
     }
 
     @Override
-    public AuthenticationResponse register(RegisterRequest register) {
-        User user = User
-                .builder()
-                .firstname(register.getName())
-                .lastname(register.getLastname())
-                .username(register.getUsername())
-                .password(passwordEncoder.encode(register.getPassword()))
-                .email(register.getEmail())
-                .terms(register.isTerms())
-                .rol(Role.USER)
-                .build();
-
-        try {
-            var userToFind = userRepository.searchByUsername(register.getUsername()).isPresent();
-            if(userToFind) {
-                logger.error("The user that you are trying to register is already in the db");
-                throw new UserAlreadyRegisteredException("The user that you are trying to register is already in the db");
-            }
-        }catch(Exception e){
-            logger.error("An error has been occur in the register method.");
-        }
-        userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user, generateExtraClaim(user));
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .email(user.getEmail())
-                .name(user.getFirstname())
-                .lastname(user.getLastname())
-                .role(user.getRol())
-                .build();
-    }
-
-    @Override
     public List<UserDto> authenticatedUsers() {
         var users = userRepository.findAll();
-        List<UserDto> userDtos = users.stream()
+        List<UserDto> usersDto = users.stream()
                 .map(user -> new UserDto(
                         user.getFirstname(),
                         user.getLastname(),
                         user.getUsername(),
                         user.getFirstname() + " " + user.getLastname()))
                 .toList();
-                logger.info("lista de usuarios ya authenticados {}", userDtos);
-        return userDtos;
+        logger.info("lista de usuarios ya authenticados {}", usersDto);
+        return usersDto;
     }
 
 
-    public void refreshToken(
+    public AuthenticationResponse refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String username;
+        final String userEmail;
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            return;
+            return null;
         }
         refreshToken = authHeader.substring(7);
-        username = jwtService.extractUsername(refreshToken);
-        if(username != null){
-            var user = userRepository.searchByUsername(username)
-                    .orElseThrow(() ->  new UsernameNotFoundException("User not found"));
+        userEmail = jwtService.extractUsername(refreshToken);
+        if(userEmail != null){
+            var user = userRepository.searchByEmail(userEmail)
+                    .orElseThrow();
             if(jwtService.isTokenValid(refreshToken, user)){
-                var accesToken = jwtService.generateToken(user, generateExtraClaim(user));
+                var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
-                saveUserToken(user, accesToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .token(accesToken)
+                saveUserToken(user, accessToken);
+                return AuthenticationResponse.builder()
+                        .token(accessToken)
                         .refreshToken(refreshToken)
                         .build();
-                new ObjectMapper().writeValue(response.getOutputStream(),authResponse);
             }
         }
+        return null;
     }
 }

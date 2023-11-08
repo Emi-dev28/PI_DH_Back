@@ -1,7 +1,7 @@
 package com.PI_back.pi_back.security;
 
 import com.PI_back.pi_back.security.filter.JwtAuthenticationFilter;
-import com.PI_back.pi_back.utils.Permissions;
+import com.PI_back.pi_back.utils.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,29 +49,29 @@ public class SecurityConfig extends WebSecurityConfiguration {
                             // todo: especificaciones de acceso segun url para manipular los Productos.
                             // para traer la lista de productos se requiere ser USER
                             auth.requestMatchers(HttpMethod.GET, "/api/v1/productos")
-                                    .hasAuthority(Permissions.READ_ALL_PRODUCTS.name());
+                                    .hasAuthority(Permission.READ_ALL_PRODUCTS.name());
                             // para registrar un producto se requiere ser admin
                             auth.requestMatchers(HttpMethod.POST, "/api/v1/productos/registrar")
-                                    .hasAuthority(Permissions.SAVE_PRODUCT.name());
+                                    .hasAuthority(Permission.SAVE_PRODUCT.name());
                             auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/añadir-caracteristica/{id}")
-                                            .hasAuthority(Permissions.SAVE_PRODUCT.name());
+                                            .hasAuthority(Permission.SAVE_PRODUCT.name());
                             auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/update/{id}")
-                                            .hasAuthority(Permissions.UPDATE_PRODUCT.name());
+                                            .hasAuthority(Permission.UPDATE_PRODUCT.name());
                             auth.requestMatchers(HttpMethod.DELETE, "/api/v1/productos/eliminar/{id}")
-                                            .hasAuthority(Permissions.DELETE_PRODUCT.name());
+                                            .hasAuthority(Permission.DELETE_PRODUCT.name());
                             auth.requestMatchers(HttpMethod.PUT, "/api/v1/productos/asignarle-categoria/{id}")
-                                    .hasAuthority(Permissions.SAVE_CATEGORY.name());
+                                    .hasAuthority(Permission.SAVE_CATEGORY.name());
                             // para dar rol administrador a un user se requiere ser admin
                             // todo: especificaciones de acceso segun url para manipular el rol Admin.
                             auth.requestMatchers(HttpMethod.POST ,"api/v1/admin/give-admin")
-                                    .hasAuthority(Permissions.GIVE_ADMIN.name());
+                                    .hasAuthority(Permission.GIVE_ADMIN.name());
                             // todo: especificaciones de acceso segun url para manipular las categorias.
                             auth.requestMatchers(HttpMethod.GET, "/api/v1/categorias")
-                                            .hasAuthority(Permissions.READ_ALL_CATEGORIES.name());
+                                            .hasAuthority(Permission.READ_ALL_CATEGORIES.name());
                             auth.requestMatchers(HttpMethod.POST, "/api/v1/categories/registrar")
-                                            .hasAuthority(Permissions.SAVE_CATEGORY.name());
+                                            .hasAuthority(Permission.SAVE_CATEGORY.name());
                             auth.requestMatchers(HttpMethod.DELETE, "/api/v1/categories/eliminar/{id}")
-                                            .hasAuthority(Permissions.SAVE_CATEGORY.name());
+                                            .hasAuthority(Permission.SAVE_CATEGORY.name());
                             auth.anyRequest().permitAll();
                         }
                         )

@@ -28,5 +28,6 @@ public class RegisterRequest {
     private String email;
     @NotBlank
     private boolean terms;
-
+    @NotBlank
+    private Role rol;
 }

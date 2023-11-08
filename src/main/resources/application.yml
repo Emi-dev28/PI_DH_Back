@@ -29,11 +29,11 @@ spring:
       org.hibernate: ERROR
     pattern:
       console: "%d{yyyy-MM-dd HH:mm:ss} [%highlight(%level)] [%cyan(%thread)] %yellow(%logger{15}) - %msg%n"
+
 application:
   security:
     jwt:
       secret-key: puquDyskCdV1bq37TEQX5SQIUag+2G/XuffTDonL4C4=
-      expiration: 24 # a day
-      refresh:
+      expiration: 86400000 # a day
+      refresh-token:
         expiration: 604800000 # 7 days
-  jwt-refresh-expiration-milliseconds: 120000

@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,11 +22,12 @@ import java.util.stream.Collectors;
 @Table(name = "USERS")
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @NotBlank
@@ -33,27 +35,28 @@ public class User implements UserDetails {
     @Column(name = "firstname")
     @NotNull
     private String firstname;
+
     @NotBlank
     @Size(max = 50)
     @Column(name = "lastname")
     @NotNull
     private String lastname;
+
     @NotBlank
     @Column(name = "password")
     private String password;
-
-    @NotBlank
-    @Size(max = 50)
-    @Column(name = "username")
-    private String username;
-
+    /*
+        @NotBlank
+        @Size(max = 50)
+        @Column(name = "username")
+        private String username;
+    */
     @Column(name= "email")
     @NotBlank
     @Size(max = 120)
     private String email;
 
     @Column(name = "terms")
-    @NotNull
     private boolean terms;
 
     @Column(name = "role")
@@ -62,6 +65,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,10 +81,9 @@ public class User implements UserDetails {
         return password;
     }
 
-
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -95,7 +98,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
