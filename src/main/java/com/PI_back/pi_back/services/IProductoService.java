@@ -14,6 +14,5 @@ public interface IProductoService {
     void asignCategoryToProduct(String productName, String categoryName) throws Exception;
 
 
-
     void updateById(Long id, Product product);
 }

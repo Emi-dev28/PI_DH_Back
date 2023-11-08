@@ -45,12 +45,12 @@ public class User implements UserDetails {
     @NotBlank
     @Column(name = "password")
     private String password;
-    /*
-        @NotBlank
-        @Size(max = 50)
-        @Column(name = "username")
-        private String username;
-    */
+
+    @NotBlank
+    @Size(max = 50)
+    @Column(name = "username")
+    private String username;
+
     @Column(name= "email")
     @NotBlank
     @Size(max = 120)
