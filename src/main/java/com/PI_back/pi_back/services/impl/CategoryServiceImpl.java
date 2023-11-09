@@ -7,7 +7,6 @@ import com.PI_back.pi_back.repository.CategoryRepository;
 import com.PI_back.pi_back.repository.ImagenRepository;
 import com.PI_back.pi_back.services.ICategoryService;
 import com.PI_back.pi_back.services.UploadService;
-import com.cloudinary.api.exceptions.BadRequest;
 import com.cloudinary.api.exceptions.NotFound;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -47,22 +44,30 @@ public class CategoryServiceImpl implements ICategoryService {
         }
     }
     //Con imagen
+
+    // todo: resolver pq no llega el imagen_id y el category_id
     @Override
     public CategoryDto categoryRegistryWImg(
             Category category,
             MultipartFile multipartFile) throws Exception {
-        logger.info("Se va a registrar una nueva categoria {}", category);
-            var savedCat = repository.save(category);
-            var catName = savedCat.getName();
-            var catDescrip = savedCat.getDescription();
-            var urlImg = uploadService.uploadFile(multipartFile);
-            var catImg = Imagen.builder().imageUrl(urlImg).category(category).build();
-            var registeredImg = imagenRepository.save(catImg);
-            savedCat.setImg(registeredImg);
+//        logger.info("Se va a registrar una nueva categoria {}", category);
+        var urlImg = uploadService.uploadFile(multipartFile);
+        var img = Imagen.builder().imageUrl(urlImg).category(category).build();
+        var registeredImg = imagenRepository.save(img);
+        category.setImg(registeredImg);
+
+        logger.info("Aca esta el id de la categoria {}", category.getId());
+        var savedCat = repository.save(category);
+        var catId = savedCat.getId();
+        var catName = savedCat.getName();
+        var catDescrip = savedCat.getDescription();
+        var catImg = savedCat.getImg();
             var categoryDto = CategoryDto.builder()
-                        .name(catName)
-                        .description(catDescrip)
-                        .img(catImg).build();
+                    .id(catId)
+                    .name(catName)
+                    .description(catDescrip)
+                    .urlImg(catImg.getImageUrl())
+                    .build();
             return categoryDto;
 
         }
@@ -82,22 +87,9 @@ public class CategoryServiceImpl implements ICategoryService {
     public String findCategoryName(String name){
         return listAll()
                 .stream()
-                .filter(cat -> cat.equals(name.toLowerCase())).toString();
+                .filter(cat -> cat.getName().equals(name.toLowerCase())).toString();
     }
 
-    public Category findById(Long id) throws BadRequest {
-
-        var categoryToFind = repository.findById(id).orElse(null);
-
-        if(categoryToFind!=null){
-            return categoryToFind;
-        }
-        else{
-            throw new BadRequest("Category not found");
-        }
-
-
-    }
 
     public Category findByName(String categoryName) throws NotFound {
         var cat = repository.searchByName(categoryName).orElseThrow(
@@ -106,15 +98,19 @@ public class CategoryServiceImpl implements ICategoryService {
         return cat;
     }
 
-    public void updateCategory(Long id, Category category) {
-    List<Category> categories = listAll();
-    for(int i = 0; i<categories.size();i++){
-        Category cat = categories.get(i);
-        if(cat.getId().equals(id)){
-            categories.set(i, category);
-            return;
-        }
+    public CategoryDto updateCategory(Long id, Category category) {
+        Category categoryToUpdate = repository.findById(id).get();
+        categoryToUpdate.setName(category.getName());
+        categoryToUpdate.setDescription(category.getDescription());
+        categoryToUpdate.setProducts(category.getProducts());
+        categoryToUpdate.setImg(category.getImg());
+        repository.save(categoryToUpdate);
+        CategoryDto categoryDto = objectMapper.convertValue(categoryToUpdate, CategoryDto.class);
+        return categoryDto;
     }
+
+    public CategoryDto findCategoryById(Long id) {
+        return objectMapper.convertValue(repository.findById(id), CategoryDto.class);
     }
     // todo --> metodo update();
 }

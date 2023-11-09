@@ -132,9 +132,9 @@ public class ProductoController {
         return respuesta;
     }
 
-    @PutMapping("/update/{id}")
-    public void updateById(@PathVariable Long id, @RequestBody com.PI_back.pi_back.model.Product product){
-        productoService.updateById(id,product);
+    @PutMapping("/editar/{id}")
+    public ProductDto updateById(@PathVariable Long id, @RequestBody Product product){
+        return productoService.updateById(id,product);
     }
     @PutMapping("/añadir-caracteristica/{id}")
     public void setCharacteristic(@PathVariable Long id, String characteristic){

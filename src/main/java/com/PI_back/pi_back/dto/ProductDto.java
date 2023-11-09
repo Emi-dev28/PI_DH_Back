@@ -17,6 +17,7 @@ import java.util.Set;
 public class ProductDto {
 
     // todo: chequear notaciones en entidades, services y repository.
+    private Long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")

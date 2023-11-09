@@ -10,6 +10,7 @@ import com.PI_back.pi_back.repository.TokenRepository;
 import com.PI_back.pi_back.repository.UserRepository;
 import com.PI_back.pi_back.security.auth_Interfaces.IAuthenticationService;
 import com.PI_back.pi_back.security.auth_Interfaces.JwtService;
+import com.PI_back.pi_back.utils.Role;
 import com.PI_back.pi_back.utils.TokenType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -69,7 +70,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .password(passwordEncoder.encode(register.getPassword()))
                 .email(register.getEmail())
                 .terms(register.isTerms())
-                .rol(register.getRol())
+                .rol(Role.USER) /* Todos los usuarios que se registran, lo hacen con el rol USER */
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

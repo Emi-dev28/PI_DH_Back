@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,13 +23,15 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
+@DynamicInsert
+@DynamicUpdate
 public class Product {
    // todo: mappear las relaciones
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "NOMBRE")
-    @Size(min = 5 , max = 80, message = "The name must be between 5 and 80 characters")
+    @Size(min = 5 , max = 80, message = "The name mus be between 5 and 80 characters")
     @NotBlank(message = "The name cannot be blank")
     @JsonProperty(value = "name")
     private String name;
@@ -45,6 +49,7 @@ public class Product {
 
     private Double price;
     @Column(name = "CATEGORIA")
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "PRODUCT_CATEGORIES",
             joinColumns = {
@@ -55,7 +60,7 @@ public class Product {
             }
 
     )
-    @JsonProperty(value = "categories")
+    @JsonIgnore
     private Set<Category> categories;
     @Column(name = "RATING")
     private Double rating;

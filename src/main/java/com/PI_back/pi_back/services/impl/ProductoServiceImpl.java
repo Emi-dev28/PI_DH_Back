@@ -10,7 +10,6 @@ import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.ProductoRepository;
 import com.PI_back.pi_back.services.IProductoService;
 import com.PI_back.pi_back.services.ImagenService;
-import com.PI_back.pi_back.services.UploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.DataInput;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -95,8 +92,10 @@ public class ProductoServiceImpl implements IProductoService {
         return productoRepository.findAll();
     }
 
-    public ProductDto registry(Product product,
-                               List<MultipartFile> files) throws Exception {
+    public ProductDto registry(
+            Product product,
+            List<MultipartFile> files) throws Exception {
+        var id = product.getId();
         var name = product.getName();
         var description = product.getDescription();
         var price = product.getPrice();
@@ -117,6 +116,7 @@ public class ProductoServiceImpl implements IProductoService {
         var stock = product.getStock();
         var characteristics = product.getCharacteristics();
         var prodToSave = ProductDto.builder()
+                .id(id)
                 .name(name)
                 .description(description)
                 .price(price)
@@ -142,15 +142,25 @@ public class ProductoServiceImpl implements IProductoService {
     }
 
     @Override
-    public void updateById(Long id, Product product) {
-        var list = listProduct();
-        for(int i = 0; i < list.size() ;i++ ){
-          Product p = list.get(i);
-          if(p.getId().equals(id)){
-              list.set(i, product);
-              return;
-          }
-        }
+    public ProductDto updateById(Long id, Product product) {
+        Product prodToUpdate = productoRepository.findById(id).get();
+        prodToUpdate.setName(product.getName());
+        prodToUpdate.setDescription(product.getDescription());
+        prodToUpdate.setPrice(product.getPrice());
+        prodToUpdate.setRating(product.getRating());
+        prodToUpdate.setStock(product.getStock());
+        prodToUpdate.setCharacteristics(product.getCharacteristics());
+        productoRepository.save(prodToUpdate);
+        ProductDto  productDto = objectMapper.convertValue(prodToUpdate, ProductDto.class);
+        return productDto;
+    }
+    @Override
+    public ProductDto removeCategory(Long id, Long id2){
+        var prodToFind = productoRepository.findById(id).get();
+        var categoryToRemove = categoryService.findCategoryById(id2);
+        Set<Category> products = prodToFind.getCategories();
+
+        return objectMapper.convertValue(prodToFind, ProductDto.class);
     }
     @Override
     public void asignCategoryToProduct(String productName, String categoryName) throws Exception {

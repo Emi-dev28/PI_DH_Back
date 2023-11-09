@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
                             auth.requestMatchers("/api/v1/productos/registrar").permitAll();
                             auth.requestMatchers("/error").permitAll();
                             auth.requestMatchers("/api/v1/categorias/registrar").permitAll();
+                            auth.requestMatchers("/api/v1/categorias").permitAll();
                             // todo: especificaciones de acceso segun url para manipular los Productos.
                             // para traer la lista de productos se requiere ser USER
                             auth.requestMatchers(HttpMethod.GET, "/api/v1/productos")

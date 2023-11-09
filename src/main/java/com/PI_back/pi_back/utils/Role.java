@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public enum Role {
     USER(Arrays.asList(Permission.READ_ALL_PRODUCTS, Permission.READ_ALL_CATEGORIES)),
-    AMIN(Arrays.asList(
+    ADMIN(Arrays.asList(
             Permission.READ_ALL_PRODUCTS,
             Permission.SAVE_PRODUCT,
             Permission.SAVE_CATEGORY,

@@ -4,6 +4,8 @@ package com.PI_back.pi_back.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Getter
 @Setter
+@DynamicInsert
+@DynamicUpdate
 public class Imagen {
 
     @Id
@@ -35,8 +39,7 @@ public class Imagen {
 //    @ManyToOne()
 //    @JoinColumn(name = "files")
 
-    @OneToOne(mappedBy = "img")
-
+    @OneToOne(mappedBy = "img", cascade = CascadeType.ALL)
     private Category category;
 
     public Imagen(String imageUrl, Product product) {

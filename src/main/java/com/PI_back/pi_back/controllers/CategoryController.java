@@ -43,7 +43,7 @@ public class CategoryController {
         var catToRegis = objectMapper.readValue(category, Category.class);
         logger.info("Este es el nombre que queda luego del object mapper {}", catToRegis.getName());
         var cat = categoryService.categoryRegistryWImg(catToRegis, img);
-        logger.info("Se va a registrar la siguiente categoria {}, si no cumple con las condiciones, el problema esta en la forma en que se guardan en la db", cat);
+        logger.info("Se va a registrar la siguiente categoria {}, si no cumple con las condiciones, el problema esta en la forma en que se guardan en la db", catToRegis);
         return ResponseEntity.ok(cat);
     }
     @DeleteMapping("/eliminar/{id}")
@@ -52,13 +52,12 @@ public class CategoryController {
     return ResponseEntity.ok("Categoria eliminada Exitosamente");
     }
     @PutMapping("/editar/{id}")
-    public ResponseEntity updateCategory(
+    public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable Long id,
             @RequestBody Category category
     ){
         logger.info("Se va a editar la siguiente categoria {}", category);
-        categoryService.updateCategory(id, category);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(categoryService.updateCategory(id, category));
     }
 
 

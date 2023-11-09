@@ -67,13 +67,15 @@ public class User implements UserDetails {
     private Set<Token> tokens;
 
 
+    // todo: descomentar las autoridades, eliminar/modificar de la db los usuarios que tienen el rol en null, chequear que el register y el login.
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = rol.getPermissions()
-                .stream().map(permission -> new SimpleGrantedAuthority(permission.name()))
-                .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("Role_" + rol.name()));
-        return authorities;
+//        List<GrantedAuthority> authorities = rol.getPermissions()
+//                .stream().map(permission -> new SimpleGrantedAuthority(permission.name()))
+//                .collect(Collectors.toList());
+//        authorities.add(new SimpleGrantedAuthority("Role_" + rol.name()));
+        return null;
     }
 
     @Override

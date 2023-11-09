@@ -11,8 +11,10 @@ public interface IProductoService {
     List<Product> listProduct();
     Product searchById(Long id);
 
+    ProductDto removeCategory(Long id, Long id2);
+
     void asignCategoryToProduct(String productName, String categoryName) throws Exception;
 
 
-    void updateById(Long id, Product product);
+    ProductDto updateById(Long id, Product product);
 }
