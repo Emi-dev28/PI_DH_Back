@@ -81,7 +81,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .email(user.getEmail())
                 .name(user.getFirstname())
                 .lastname(user.getLastname())
-                .role(user.getRol())
+                .rol(user.getRol())
                 .build();
     }
     @Override
@@ -107,7 +107,7 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .email(user.getEmail())
                 .name(user.getFirstname())
                 .lastname(user.getLastname())
-                .role(user.getRol())
+                .rol(user.getRol())
                 .build();
     }
 
@@ -180,6 +180,10 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 return AuthenticationResponse.builder()
                         .token(accessToken)
                         .refreshToken(refreshToken)
+                        .email(user.getEmail())
+                        .name(user.getFirstname())
+                        .lastname(user.getLastname())
+                        .rol(user.getRol())
                         .build();
             }
         }

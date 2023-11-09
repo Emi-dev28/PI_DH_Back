@@ -95,7 +95,8 @@ public class ProductoServiceImpl implements IProductoService {
         return productoRepository.findAll();
     }
 
-    public ProductDto registry(Product product, List<MultipartFile> files) throws Exception {
+    public ProductDto registry(Product product,
+                               List<MultipartFile> files) throws Exception {
         var name = product.getName();
         var description = product.getDescription();
         var price = product.getPrice();

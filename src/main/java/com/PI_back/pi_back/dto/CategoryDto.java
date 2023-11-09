@@ -9,10 +9,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Builder
 @NoArgsConstructor
-
+@EqualsAndHashCode
 public class CategoryDto {
 
     private String name;
@@ -20,4 +19,16 @@ public class CategoryDto {
     private Set<Product> products;
     private Imagen img;
 
+
+    public CategoryDto(String name, String description, Set<Product> products, Imagen img) {
+        this.name = name;
+        this.description = description;
+        this.img = img;
+    }
+
+    public CategoryDto(String description, Set<Product> products, Imagen img) {
+        this.description = description;
+        this.products = products;
+        this.img = img;
+    }
 }
