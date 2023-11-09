@@ -24,5 +24,5 @@ public class AuthenticationResponse {
     @JsonProperty("lastname")
     private String lastname;
     @JsonProperty("role")
-    private Role role;
+    private Role rol;
 }

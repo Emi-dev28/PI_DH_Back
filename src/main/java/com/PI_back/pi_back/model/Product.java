@@ -27,7 +27,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "NOMBRE")
-    @Size(min = 5 , max = 80, message = "The name mus be between 5 and 80 characters")
+    @Size(min = 5 , max = 80, message = "The name must be between 5 and 80 characters")
     @NotBlank(message = "The name cannot be blank")
     @JsonProperty(value = "name")
     private String name;
@@ -45,7 +45,6 @@ public class Product {
 
     private Double price;
     @Column(name = "CATEGORIA")
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "PRODUCT_CATEGORIES",
             joinColumns = {
