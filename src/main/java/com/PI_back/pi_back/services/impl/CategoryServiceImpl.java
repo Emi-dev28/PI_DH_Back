@@ -59,11 +59,11 @@ public class CategoryServiceImpl implements ICategoryService {
             var catDescrip = savedCat.getDescription();
             var urlImg = uploadService.uploadFile(multipartFile);
             var catImg = Imagen.builder().imageUrl(urlImg).category(category).build();
+
             var categoryDto = CategoryDto.builder()
                     .name(catName)
                     .description(catDescrip)
                     .img(catImg).build();
-
             return categoryDto;
         }
     }

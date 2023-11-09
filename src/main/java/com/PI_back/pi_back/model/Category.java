@@ -24,7 +24,6 @@ public class Category {
 
     @Column(name = "NOMBRE")
     //@NotBlank
-    @JsonIgnore
     private String name;
 
   //  @OneToMany(mappedBy = "category")
