@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -66,6 +67,7 @@ public class CategoryServiceImpl implements ICategoryService {
                     .id(catId)
                     .name(catName)
                     .description(catDescrip)
+                    .products(category.getProducts())
                     .urlImg(catImg.getImageUrl())
                     .build();
             return categoryDto;
@@ -84,10 +86,14 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     // lista las categorias
-    public List<Category> listAll() {
+    public List<CategoryDto> listAll() {
 //        Set<Category> categories = new HashSet<Category>(repository.findAll());
         //noinspection ResultOfMethodCallIgnored
-        return repository.findAll();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        repository.findAll().forEach(cat -> {
+            categoryDtos.add(objectMapper.convertValue(cat, CategoryDto.class)
+);});
+        return categoryDtos ;
     }
     public String findCategoryName(String name){
         return listAll()

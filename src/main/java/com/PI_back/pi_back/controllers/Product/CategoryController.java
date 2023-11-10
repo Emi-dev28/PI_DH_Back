@@ -26,7 +26,7 @@ public class CategoryController {
 
 
     @GetMapping()
-    public ResponseEntity<List<Category>> listAllCategories(){
+    public ResponseEntity<List<CategoryDto>> listAllCategories(){
         return ResponseEntity.ok(categoryService.listAll());
     }
     @PostMapping("/registrar")
