@@ -47,55 +47,6 @@ public class ProductoController {
     }
 
 
-    // todo: resolver el id de las imagenes que se muestran en null.
-    @PostMapping("/registrar")
-    public ResponseEntity<ProductDto> productsRegistry(
-            @RequestBody @Valid Product producto,
-            @ModelAttribute List<MultipartFile> multipartFiles){
-        try {
-            // mediante el producto, nos llega el dto, que contiene nombre, descripcion y stock. Se crea un Producto para persistir en la base de datos
-            // Se crea una lista de imagenes para luego añadirle objetos de tipo imagen
-
-//            Product product1 = new Product(producto.getName(), producto.getDescription(),
-//                    producto.getPrice(),producto.getCategory(),null, null,producto.getStock(),producto.getCharacteristics());
-
-//            Product producto1 = new Product(producto.getName(), producto.getDescription(),producto.getPrice(), producto.getCategories(), null, null,producto.getStock(),producto.getCharacteristics());
-//            for(MultipartFile imagen : multipartFiles){
-//                var urlImg = uploadServiceImplement.uploadFile(imagen);
-//                Imagen imagen1 = new Imagen(urlImg, productoDto);
-//                listaDeImagenes.add(imagen1);
-//                imagenService.registrarImagen(imagen1);
-//            }
-            for(MultipartFile file : multipartFiles){
-                var imgUrl = uploadServiceImplement.uploadFile(file);
-                Imagen img = new Imagen(imgUrl, producto);
-                producto.getImagenes().add(img);
-            }
-
-            ResponseEntity<ProductDto> response;
-            ProductDto productoDto = productoService.productRegistry(producto);
-            if (productoDto != null) {
-                return response = ResponseEntity.status(HttpStatus.CREATED).build();
-            } else response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            return response;
-        }   catch(Exception e){
-            e.printStackTrace();
-            logger.error("product could not be registered");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-//            Set<Imagen> listaDeImagenes = new HashSet<>();
-
-//            producto1.setImagenes(listaDeImagenes);
-//            logger.info("El producto a guardar es" + producto1);
-//            productoService.productRegistry(producto1);
-//            return ResponseEntity.status(HttpStatus.CREATED).body(producto1);
-//        }   catch(Exception e){
-//            e.printStackTrace();
-//            logger.error("No se pudo registrar el producto");
-//        }
-//        return ResponseEntity.badRequest().build();
-    }
-
     // todo: fijarse por que el arreglo de strings 'characteristics' se persiste a la base de datos como binary
     @PostMapping(value = "/registrar-producto", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<ProductDto> registrarUnproducto(
