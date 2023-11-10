@@ -79,11 +79,13 @@ public class Product {
     @Column
 
     @JsonProperty(value = "characteristics")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "characteristic_id")
+    @JsonManagedReference
+    private List<Characteristic> characteristics;
 
-    private List<String> characteristics;
 
-
- public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<String> characteristics) {
+ public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics) {
   this.name = name;
   this.description = description;
   this.price = price;

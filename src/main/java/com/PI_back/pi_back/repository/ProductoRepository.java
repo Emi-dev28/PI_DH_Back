@@ -15,5 +15,7 @@ public interface ProductoRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.name = :name")
     Optional<Product> searchByName(@Param("name") String name);
 
+//    @Query("SELECT p.characteristics FROM Product")
+//    Optional<String> findCharacteristics();
 
 }

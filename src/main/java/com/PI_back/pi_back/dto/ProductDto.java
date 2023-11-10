@@ -2,6 +2,7 @@ package com.PI_back.pi_back.dto;
 
 
 import com.PI_back.pi_back.model.Category;
+import com.PI_back.pi_back.model.Characteristic;
 import com.PI_back.pi_back.model.Imagen;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -32,6 +33,6 @@ public class ProductDto {
     @JsonProperty("stock")
     private int stock;
     @JsonProperty("characteristics")
-    private List<String> characteristics;
+    private List<Characteristic> characteristics;
 
 }

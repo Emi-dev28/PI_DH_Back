@@ -1,11 +1,14 @@
 package com.PI_back.pi_back.dto;
 
-import com.PI_back.pi_back.model.Category;
-import com.PI_back.pi_back.model.Product;
+import lombok.*;
 
-import java.util.Set;
-
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImageDto {
+
     private Long id;
     private String urlImg;
 

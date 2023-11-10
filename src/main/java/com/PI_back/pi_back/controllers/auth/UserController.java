@@ -1,5 +1,6 @@
-package com.PI_back.pi_back.controllers;
+package com.PI_back.pi_back.controllers.auth;
 
+import com.PI_back.pi_back.controllers.Product.ProductoController;
 import com.PI_back.pi_back.model.User;
 import com.PI_back.pi_back.services.impl.UserServiceImplement;
 import com.PI_back.pi_back.utils.Role;

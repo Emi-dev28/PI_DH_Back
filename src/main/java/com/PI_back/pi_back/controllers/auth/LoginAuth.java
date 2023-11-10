@@ -1,4 +1,4 @@
-package com.PI_back.pi_back.controllers;
+package com.PI_back.pi_back.controllers.auth;
 
 import com.PI_back.pi_back.dto.AuthenticationRequest;
 import com.PI_back.pi_back.dto.AuthenticationResponse;

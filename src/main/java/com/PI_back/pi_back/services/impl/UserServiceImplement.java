@@ -1,6 +1,6 @@
 package com.PI_back.pi_back.services.impl;
 
-import com.PI_back.pi_back.controllers.ProductoController;
+import com.PI_back.pi_back.controllers.Product.ProductoController;
 import com.PI_back.pi_back.model.User;
 import com.PI_back.pi_back.repository.UserRepository;
 import com.PI_back.pi_back.services.IUserDetailsService;

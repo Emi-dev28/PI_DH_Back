@@ -1,10 +1,12 @@
 package com.PI_back.pi_back.services.impl;
 
 import com.PI_back.pi_back.dto.CategoryDto;
+import com.PI_back.pi_back.dto.CharacteristicDto;
 import com.PI_back.pi_back.dto.ImageDto;
 import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.exceptions.ProductNotFoundException;
 import com.PI_back.pi_back.model.Category;
+import com.PI_back.pi_back.model.Characteristic;
 import com.PI_back.pi_back.model.Imagen;
 import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.ProductoRepository;
@@ -31,14 +33,16 @@ public class ProductoServiceImpl implements IProductoService {
     private UploadServiceImplement uploadService;
     private ImagenService imagenService;
     private ObjectMapper objectMapper;
+    private CharacteristicImpl characteristicService;
 
     @Autowired
-    public ProductoServiceImpl(CategoryServiceImpl categoryService, ProductoRepository productoRepository, UploadServiceImplement uploadService, ImagenService imagenService, ObjectMapper objectMapper) {
+    public ProductoServiceImpl(CategoryServiceImpl categoryService, ProductoRepository productoRepository, UploadServiceImplement uploadService, ImagenService imagenService, ObjectMapper objectMapper,CharacteristicImpl characteristicService) {
         this.categoryService = categoryService;
         this.productoRepository = productoRepository;
         this.uploadService = uploadService;
         this.imagenService = imagenService;
         this.objectMapper = objectMapper;
+        this.characteristicService = characteristicService;
     }
 
 
@@ -84,6 +88,16 @@ public class ProductoServiceImpl implements IProductoService {
 
         @Override
     public void deleteProduct(Long id) {
+        Product product = productoRepository.findById(id).get();
+        Set<Imagen> imgs = product.getImagenes();
+        for(Imagen img : imgs){
+            imagenService.deleteImagen(img.getId());
+        }
+        Set<Category> categories = product.getCategories();
+        for(Category cat : categories){
+            categoryService.deleteCategoryById(cat.getId());
+        }
+
         productoRepository.deleteById(id);
     }
 
@@ -95,32 +109,41 @@ public class ProductoServiceImpl implements IProductoService {
     public ProductDto registry(
             Product product,
             List<MultipartFile> files) throws Exception {
-        var id = product.getId();
-        var name = product.getName();
-        var description = product.getDescription();
-        var price = product.getPrice();
-        var categories = product.getCategories();
-        var rating = product.getRating();
-        var imagenes = product.getImagenes();
+        var registeredProd = productoRepository.save(product);
+        var id = registeredProd.getId();
+        var name = registeredProd.getName();
+        var description = registeredProd.getDescription();
+        var price = registeredProd.getPrice();
+//        var categories = registeredProd.getCategories();
+        var rating = registeredProd.getRating();
+        var imagenes = registeredProd.getImagenes();
         for (MultipartFile multipartFile : files){
             var urlImg = uploadService.uploadFile(multipartFile);
-            var toAdd = Imagen.builder().imageUrl(urlImg).product(product).build();
+            var toAdd = Imagen.builder().imageUrl(urlImg).product(registeredProd).build();
             imagenes.add(toAdd);
             imagenService.registrarImagen(toAdd);
         }
-        for (Category category : categories){
-            var newCategory = new Category(category.getName());
-            categoryService.categoryRegistry(newCategory);
-            categories.add(newCategory);
-        }
-        var stock = product.getStock();
-        var characteristics = product.getCharacteristics();
+
+//        if(categories!=null){
+//            for (Category category : categories) {
+//                var newCategory = new Category(category.getName());
+//                categoryService.categoryRegistry(newCategory);
+//                categories.add(newCategory);
+//            }
+//        }
+        var stock = registeredProd.getStock();
+        var characteristics = registeredProd.getCharacteristics();
+        Logger.info("lista de caracteristicas: {}", characteristics);
+        characteristics.forEach(characteristic -> {
+            characteristic.setProduct(product);
+            characteristicService.registry(characteristic);
+        });
         var prodToSave = ProductDto.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .price(price)
-                .categories(categories)
+//                .categories(categories)
                 .images(imagenes)
                 .stock(stock)
                 .characteristics(characteristics)
@@ -130,7 +153,7 @@ public class ProductoServiceImpl implements IProductoService {
     }
 
     @Override
-    public Product searchById(Long id) {
+    public ProductDto searchById(Long id) {
     Product productABuscar = productoRepository.findById(id).orElse(null);
     if(productABuscar != null){
     Logger.info("Se encontro el producto con id {}", id);
@@ -138,8 +161,36 @@ public class ProductoServiceImpl implements IProductoService {
     else{
         Logger.info("El producto buscado con id {}, no se encuentra en la base de datos", id);
     }
-    return productABuscar;
+    var response = objectMapper.convertValue(productABuscar, ProductDto.class);
+    return response;
     }
+    // recibe una category y un id (del producto donde va a guardar la categoria)
+    @Override
+    public CategoryDto asignCategoryToProduct(Category category, Long id){
+        var product = productoRepository.findById(id).get();
+        product.getCategories().add(category);
+        return objectMapper.convertValue(category, CategoryDto.class);
+
+    }
+    @Override
+    public CharacteristicDto asignCharacteristic(Characteristic characteristic, Long id){
+        var prod = productoRepository.findById(id).get();
+        prod.getCharacteristics().add(characteristic);
+        var charactDto = objectMapper.convertValue(characteristic, CharacteristicDto.class);
+        return charactDto;
+    }
+//    @Override
+//    public CharacteristicDto editCharacteristic(Characteristic characteristic, Long id){
+//
+//        var prod = productoRepository.findById(id).get();
+//        var charact = characteristicService.getOne(characteristic.getId());
+//        for (Characteristic characteristic1 : prod.getCharacteristics()){
+//            if(characteristic1.getId().equals(characteristic.getId())){
+//
+//            }
+//        }
+//        var charactToEdit = prod.getCharacteristics().get(characteristic.getId())
+//    }
 
     @Override
     public ProductDto updateById(Long id, Product product) {
@@ -149,18 +200,17 @@ public class ProductoServiceImpl implements IProductoService {
         prodToUpdate.setPrice(product.getPrice());
         prodToUpdate.setRating(product.getRating());
         prodToUpdate.setStock(product.getStock());
-        prodToUpdate.setCharacteristics(product.getCharacteristics());
+//        prodToUpdate.setCharacteristics(product.getCharacteristics());
         productoRepository.save(prodToUpdate);
         ProductDto  productDto = objectMapper.convertValue(prodToUpdate, ProductDto.class);
         return productDto;
     }
     @Override
-    public ProductDto removeCategory(Long id, Long id2){
-        var prodToFind = productoRepository.findById(id).get();
-        var categoryToRemove = categoryService.findCategoryById(id2);
-        Set<Category> products = prodToFind.getCategories();
-
-        return objectMapper.convertValue(prodToFind, ProductDto.class);
+    public ProductDto removeCategory(Long id, String name){
+        var prod = productoRepository.findById(id).get();
+        var cat = categoryService.findCategoryByName(name);
+        prod.getCategories().remove(cat);
+        return objectMapper.convertValue(prod, ProductDto.class);
     }
     @Override
     public void asignCategoryToProduct(String productName, String categoryName) throws Exception {
@@ -170,4 +220,19 @@ public class ProductoServiceImpl implements IProductoService {
         product.getCategories().add(category);
         productoRepository.save(product);
     }
+
+    // Recibe el nombre de la caracteristica y el id del producto al cual se le quiere añadir una caracteristica
+    @Override
+    public void asignCharacteristicToProduct(Characteristic characteristic, Long id){
+        Product product = productoRepository.findById(id).get();
+        product.getCharacteristics().add(characteristic);
+    }
+
+
+//    @Override
+//    public List<String> listOfCharacteristics(){
+//        var list = productoRepository.findAll().
+//        List<String> characteristics = new ArrayList<>()
+//        return
+//    }
 }

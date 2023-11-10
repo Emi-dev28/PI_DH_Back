@@ -78,6 +78,11 @@ public class CategoryServiceImpl implements ICategoryService {
     repository.deleteById(id);
     }
 
+    @Override
+    public Category findCategoryByName(String name) {
+        return repository.searchByName(name).get();
+    }
+
     // lista las categorias
     public List<Category> listAll() {
 //        Set<Category> categories = new HashSet<Category>(repository.findAll());

@@ -1,23 +1,19 @@
-package com.PI_back.pi_back.controllers;
+package com.PI_back.pi_back.controllers.Product;
 
 
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.model.Category;
 
 import com.PI_back.pi_back.services.impl.CategoryServiceImpl;
-import com.cloudinary.api.exceptions.BadRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
