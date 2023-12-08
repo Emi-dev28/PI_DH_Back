@@ -9,16 +9,17 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Objects;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Caracteristica")
 @Entity
 @Builder
-//@Getter
-//@Setter
+@Getter
+@Setter
 @DynamicInsert
 @DynamicUpdate
-@Data
 public class Characteristic {
 
     @Id
@@ -33,4 +34,16 @@ public class Characteristic {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Characteristic that = (Characteristic) o;
+        return id.equals(that.id) && description.equals(that.description) && product.equals(that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, product);
+    }
 }

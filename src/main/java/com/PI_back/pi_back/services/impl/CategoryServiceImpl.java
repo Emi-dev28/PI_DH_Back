@@ -3,6 +3,7 @@ package com.PI_back.pi_back.services.impl;
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.model.Category;
 import com.PI_back.pi_back.model.Imagen;
+import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.CategoryRepository;
 import com.PI_back.pi_back.repository.ImagenRepository;
 import com.PI_back.pi_back.services.ICategoryService;
@@ -12,10 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -122,6 +125,18 @@ public class CategoryServiceImpl implements ICategoryService {
 
     public CategoryDto findCategoryById(Long id) {
         return objectMapper.convertValue(repository.findById(id), CategoryDto.class);
+    }
+
+    public CategoryDto getById(Long id) {
+        var cat = repository.findById(id).get();
+        return objectMapper.convertValue(cat, CategoryDto.class);
+    }
+
+    public void asignProdToCat(Long id, Product product){
+        var cat = getById(id);
+        cat.setProducts(new HashSet<>());
+        cat.getProducts().add(product);
+        updateCategory(product.getId(),objectMapper.convertValue(cat, Category.class));
     }
     // todo --> metodo update();
 }
