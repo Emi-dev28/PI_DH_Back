@@ -1,5 +1,6 @@
 package com.PI_back.pi_back.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +11,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -38,10 +40,11 @@ public class Category {
     private String description;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "categories")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL/*, mappedBy = "categories"*/)
     // Le doy la posibilidad de que sea null, para aquellas categorias que se crean sin ningun producto asignado todavia.
+    @JoinColumn(name = "product_fk")
     @Nullable
-    @JsonIgnore
+    @JsonBackReference
     // El set te permite asegurarte que cada item es unico en la lista
     private Set<Product> products;
 //
@@ -66,18 +69,9 @@ public class Category {
     public Category(String name, String description,Set<Product> products, Imagen img) {
         this.name = name;
         this.description = description;
-        this.products = products;
+        this.products = new HashSet<>();
         this.img = img;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", products=" + products +
-                ", img=" + img +
-                '}';
-    }
+
 }

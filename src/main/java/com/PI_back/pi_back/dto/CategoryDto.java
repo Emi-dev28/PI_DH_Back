@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class CategoryDto {
     public CategoryDto(Long id,String description, Set<Product> products, String urlImg) {
         this.id = id;
         this.description = description;
-        this.products = products;
+        this.products = new HashSet<>();
         this.urlImg =urlImg;
     }
 
