@@ -1,20 +1,15 @@
 package com.PI_back.pi_back.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,10 +20,13 @@ import java.util.Set;
 @Setter
 @DynamicInsert
 @DynamicUpdate
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityReference(alwaysAsId = true)
 public class Product {
-   // todo: mappear las relaciones
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnoreProperties
     private Long id;
     @Column(name = "NOMBRE")
     @Size(min = 5 , max = 80, message = "The name mus be between 5 and 80 characters")
@@ -49,7 +47,6 @@ public class Product {
 
     private Double price;
     @Column(name = "CATEGORIA")
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "PRODUCT_CATEGORIES",
             joinColumns = {
@@ -61,38 +58,62 @@ public class Product {
 
     )
     @JsonIgnore
+    //@JsonProperty("set_of_categories")
     private Set<Category> categories;
     @Column(name = "RATING")
     private Double rating;
     //La opción que puede ser útil para la eliminación en cascada es cascade. Esencialmente la cascada nos permite definir qué operación (persistir, fusionar, eliminar) en la entidad padre debe ser aplicada en cascada a las entidades hijas relacionadas.
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true) //Además de utilizar CascadeType.All o CascadeType.remove, es esencial establecer la propiedad orphanRemoval a true para asegurar la correcta eliminación de las entidades huérfanas. Con esta propiedad establecida, JPA elimina automáticamente cualquier entidad huérfana de la base de datos
     @JoinColumn(name = "imagen_id")
-    @JsonManagedReference
+    //@JsonProperty("set_of_images")
+    @JsonIgnore
     private Set<Imagen> imagenes = new HashSet<>();
 
     @Column(name = "STOCK")
     @JsonProperty(value = "stock")
-
     @Positive
     private Integer stock;
 
     @Column
-
-    @JsonProperty(value = "characteristics")
+    //@JsonProperty(value = "characteristics")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "characteristic_id")
     @JsonManagedReference
+    // @JsonProperty("set_of_characteristics")
     private List<Characteristic> characteristics;
 
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    // @NotBlank(...)
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "availability_id")
+//    @JsonProperty("product_availability")
+//    private ProductAvailability availability;
 
- public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics) {
+    private boolean isReserved;
+
+// @Override
+// public boolean equals(Object o) {
+//  if (this == o) return true;
+//  if (o == null || getClass() != o.getClass()) return false;
+//  Product product = (Product) o;
+//  return isReserved == product.isReserved && id.equals(product.id) && name.equals(product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(categories, product.categories) && Objects.equals(rating, product.rating) && Objects.equals(imagenes, product.imagenes) && Objects.equals(stock, product.stock) && characteristics.equals(product.characteristics) && availability.equals(product.availability);
+// }
+
+// @Override
+// public int hashCode() {
+//  return Objects.hash(id, name, description, price, categories, rating, imagenes, stock, characteristics, availability, isReserved);
+// }
+
+ public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, ProductAvailability availability, boolean isReserved) {
   this.name = name;
   this.description = description;
   this.price = price;
-  this.categories = categories;
+  this.categories = new HashSet<>();
   this.rating = rating;
-  this.imagenes = imagenes;
+  this.imagenes = new HashSet<>();
   this.stock = stock;
-  this.characteristics = characteristics;
+  this.characteristics = new ArrayList<>();
+//  this.availability = availability;
+  this.isReserved = isReserved;
  }
 }
