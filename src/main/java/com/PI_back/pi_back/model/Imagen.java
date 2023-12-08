@@ -32,9 +32,8 @@ public class Imagen {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JoinColumn(name = "producto_id")
-    @JsonBackReference
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @Transient todo>
+    @JsonBackReference
     private Product product;
 //    @ManyToOne()
 //    @JoinColumn(name = "files")
