@@ -1,5 +1,6 @@
 package com.PI_back.pi_back.services;
 
+import com.PI_back.pi_back.dto.AvailabilityDto;
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.dto.CharacteristicDto;
 import com.PI_back.pi_back.dto.ProductDto;
@@ -29,4 +30,8 @@ public interface IProductoService {
 
     // Recibe el nombre de la caracteristica y el id del producto al cual se le quiere añadir una caracteristica
     void asignCharacteristicToProduct(Characteristic characteristic, Long id);
+
+//    AvailabilityDto getAvailability(Long id);
+
+    ProductDto getProductByName(String name);
 }

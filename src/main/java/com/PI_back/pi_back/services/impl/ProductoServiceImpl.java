@@ -1,9 +1,6 @@
 package com.PI_back.pi_back.services.impl;
 
-import com.PI_back.pi_back.dto.CategoryDto;
-import com.PI_back.pi_back.dto.CharacteristicDto;
-import com.PI_back.pi_back.dto.ImageDto;
-import com.PI_back.pi_back.dto.ProductDto;
+import com.PI_back.pi_back.dto.*;
 import com.PI_back.pi_back.exceptions.ProductNotFoundException;
 import com.PI_back.pi_back.model.Category;
 import com.PI_back.pi_back.model.Characteristic;
@@ -12,6 +9,7 @@ import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.ProductoRepository;
 import com.PI_back.pi_back.services.IProductoService;
 import com.PI_back.pi_back.services.ImagenService;
+import com.PI_back.pi_back.utils.JsonPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +112,8 @@ public class ProductoServiceImpl implements IProductoService {
         var name = registeredProd.getName();
         var description = registeredProd.getDescription();
         var price = registeredProd.getPrice();
-//        var categories = registeredProd.getCategories();
+//        var availability = registeredProd.getAvailability();
+        var isReserved = registeredProd.isReserved();
         var rating = registeredProd.getRating();
         var imagenes = registeredProd.getImagenes();
         for (MultipartFile multipartFile : files){
@@ -123,16 +122,8 @@ public class ProductoServiceImpl implements IProductoService {
             imagenes.add(toAdd);
             imagenService.registrarImagen(toAdd);
         }
-
-//        if(categories!=null){
-//            for (Category category : categories) {
-//                var newCategory = new Category(category.getName());
-//                categoryService.categoryRegistry(newCategory);
-//                categories.add(newCategory);
-//            }
-//        }
         var stock = registeredProd.getStock();
-        var characteristics = registeredProd.getCharacteristics();
+        var characteristics = productoRepository.findById(id).get().getCharacteristics();
         Logger.info("lista de caracteristicas: {}", characteristics);
         characteristics.forEach(characteristic -> {
             characteristic.setProduct(product);
@@ -147,8 +138,11 @@ public class ProductoServiceImpl implements IProductoService {
                 .images(imagenes)
                 .stock(stock)
                 .characteristics(characteristics)
+//                .availability(availability)
+                .isReserved(isReserved)
                 .build();
 
+//        Logger.info("product --> {}", JsonPrinter.toString(prodToSave));
         return prodToSave;
     }
 
@@ -179,18 +173,7 @@ public class ProductoServiceImpl implements IProductoService {
         var charactDto = objectMapper.convertValue(characteristic, CharacteristicDto.class);
         return charactDto;
     }
-//    @Override
-//    public CharacteristicDto editCharacteristic(Characteristic characteristic, Long id){
-//
-//        var prod = productoRepository.findById(id).get();
-//        var charact = characteristicService.getOne(characteristic.getId());
-//        for (Characteristic characteristic1 : prod.getCharacteristics()){
-//            if(characteristic1.getId().equals(characteristic.getId())){
-//
-//            }
-//        }
-//        var charactToEdit = prod.getCharacteristics().get(characteristic.getId())
-//    }
+
 
     @Override
     public ProductDto updateById(Long id, Product product) {
@@ -227,12 +210,23 @@ public class ProductoServiceImpl implements IProductoService {
         Product product = productoRepository.findById(id).get();
         product.getCharacteristics().add(characteristic);
     }
-
-
 //    @Override
-//    public List<String> listOfCharacteristics(){
-//        var list = productoRepository.findAll().
-//        List<String> characteristics = new ArrayList<>()
-//        return
+//    public AvailabilityDto getAvailability(Long id){
+//        var prod = productoRepository.findById(id).get();
+////        var fromDate = prod.getAvailability().getFromDate();
+////        var toDate = prod.getAvailability().getToDate();
+//        var response = AvailabilityDto.builder()
+//                .fromDate(fromDate)
+//                .toDate(toDate)
+//                .build();
+//        Logger.info("GET AVAILABILITY: {}", JsonPrinter.toString(response));
+//        return response;
 //    }
+    @Override
+    public ProductDto getProductByName(String name) {
+        var product = productoRepository.searchByName(name).get();
+
+        return objectMapper.convertValue(product, ProductDto.class);
+    }
+
 }
