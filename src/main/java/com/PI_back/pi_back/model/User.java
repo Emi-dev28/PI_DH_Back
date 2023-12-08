@@ -1,6 +1,7 @@
 package com.PI_back.pi_back.model;
 
 import com.PI_back.pi_back.utils.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,13 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import java.util.*;
 
 @Entity
 @Table(name = "USERS")
@@ -25,9 +22,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @NotBlank
@@ -46,7 +43,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @NotBlank
     @Size(max = 50)
     @Column(name = "username")
     private String username;
@@ -66,6 +62,17 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
 
+    @Column (name = "reserves")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
+    @Nullable
+    private HashSet<Product> reserves;
+
+    @Column (name = "favorites")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
+    @Nullable
+    private HashSet<Product> favorites;
 
     // todo: descomentar las autoridades, eliminar/modificar de la db los usuarios que tienen el rol en null, chequear que el register y el login.
 
