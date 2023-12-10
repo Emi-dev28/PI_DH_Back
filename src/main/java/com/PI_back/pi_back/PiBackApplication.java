@@ -1,10 +1,7 @@
 package com.PI_back.pi_back;
 
 import com.PI_back.pi_back.dto.ProductDto;
-import com.PI_back.pi_back.model.Category;
-import com.PI_back.pi_back.model.Characteristic;
-import com.PI_back.pi_back.model.Product;
-import com.PI_back.pi_back.model.ProductAvailability;
+import com.PI_back.pi_back.model.*;
 import com.PI_back.pi_back.utils.JsonPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
@@ -31,6 +28,14 @@ public class PiBackApplication {
         LocalDate localDateTo = LocalDate.of(2024, 1, 10);
         JsonObject jsonObject = new JsonObject();
         ObjectMapper objectMapper = new ObjectMapper();
+        User user = User.builder()
+                .email("asuaaskomdoa@asdjas.com")
+                .firstname("maos dmasd")
+                .lastname("i nsdfiuasdna")
+                .username("dais uunfiua")
+                .password("as duiansd a")
+                .build();
+        Reserve reserve = Reserve.builder().id(1L).user(user).build();
         Product product = Product.builder()
                 .name("producto")
                 .description("una descripcion")
@@ -41,14 +46,15 @@ public class PiBackApplication {
                 .stock(10)
                 .rating(2.0)
                 .characteristics(List.of(Characteristic.builder().description("Una caracteristica").build()))
-//                .availability(ProductAvailability.builder().fromDate(localDate).toDate(localDateTo).build())
+                .availability(Set.of(ProductAvailability.builder().fromDate(localDate).toDate(localDateTo).build()))
+                .favorites(Set.of(Favorite.builder().user(user).build()))
                 .isReserved(false)
                 .build();
-        ProductDto productDto = ProductDto
+     /*   ProductDto productDto = ProductDto
                 .builder().name("Un proudcto").description("Una descripcion que deberia superar la cantidad de caracteres de la restriccion").price(10.0).categories(Set.of(Category.builder().name("Una categoria").description("Una descripcionasdnasdnja").build()))
-                .stock(10).characteristics(List.of(Characteristic.builder().description("categoria asndkask").build())).availability(ProductAvailability.builder().fromDate(localDate).toDate(localDateTo).build()).isReserved(true).build();
+                .stock(10*//*).characteristics(List.of(Characteristic.builder().description("categoria asndkask").build())).availability(ProductAvailability.builder().fromDate(localDate).toDate(localDateTo).build()).isReserved(true).build();*/
         Logger.info("LA ESTRUCTURA DEL PRODUCTO ES {}", JsonPrinter.toString(product));
-		Logger.info("LA ESTRUCTURA DEL PRODUCTODTO ES {}", JsonPrinter.toString(productDto));
+		/*Logger.info("LA ESTRUCTURA DEL PRODUCTODTO ES {}", JsonPrinter.toString(productDto));*/
         //Logger.info("Este es el objecto que se convierte: {}",prod);
         //Logger.info("Con el toString: {}", JsonPrinter.toString(prod));
     }
