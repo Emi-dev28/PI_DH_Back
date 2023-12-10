@@ -2,6 +2,7 @@ package com.PI_back.pi_back.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.google.gson.annotations.SerializedName;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -38,7 +39,6 @@ public class Product {
     @NotBlank(message = "The description cannot be blank")
     @Size(min = 20, max = 256, message = "The description must be between 20 and 256 characters")
     @JsonProperty(value = "description")
-
     private String description;
 
     @Column(name = "PRECIO")
@@ -55,10 +55,9 @@ public class Product {
             inverseJoinColumns = {
                     @JoinColumn(name = "category_id", referencedColumnName = "id")
             }
-
     )
     @JsonIgnore
-    //@JsonProperty("set_of_categories")
+    @JsonProperty("categories")
     private Set<Category> categories;
     @Column(name = "RATING")
     private Double rating;
@@ -79,41 +78,56 @@ public class Product {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "characteristic_id")
     @JsonManagedReference
+    @Nullable
     // @JsonProperty("set_of_characteristics")
     private List<Characteristic> characteristics;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    // @NotBlank(...)
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "availability_id")
-//    @JsonProperty("product_availability")
-//    private ProductAvailability availability;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Column(name = "product_availability")
+    @JsonProperty("product_availability")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ProductAvailability> availability;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "reserves")
+    private Set<Reserve> reserves;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "favorites")
+    private Set<Favorite> favorites;
     private boolean isReserved;
 
-// @Override
-// public boolean equals(Object o) {
-//  if (this == o) return true;
-//  if (o == null || getClass() != o.getClass()) return false;
-//  Product product = (Product) o;
-//  return isReserved == product.isReserved && id.equals(product.id) && name.equals(product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(categories, product.categories) && Objects.equals(rating, product.rating) && Objects.equals(imagenes, product.imagenes) && Objects.equals(stock, product.stock) && characteristics.equals(product.characteristics) && availability.equals(product.availability);
-// }
 
-// @Override
-// public int hashCode() {
-//  return Objects.hash(id, name, description, price, categories, rating, imagenes, stock, characteristics, availability, isReserved);
-// }
 
- public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, ProductAvailability availability, boolean isReserved) {
-  this.name = name;
-  this.description = description;
-  this.price = price;
-  this.categories = new HashSet<>();
-  this.rating = rating;
-  this.imagenes = new HashSet<>();
-  this.stock = stock;
-  this.characteristics = new ArrayList<>();
-//  this.availability = availability;
-  this.isReserved = isReserved;
- }
+    @Override
+    public String toString() {
+        return "Product{" +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", categories=" + categories +
+                ", rating=" + rating +
+                ", imagenes=" + imagenes +
+                ", stock=" + stock +
+                ", characteristics=" + characteristics +
+                ", availability=" + availability +
+                ", isReserved=" + isReserved +
+                '}';
+    }
+
+    public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, Set<ProductAvailability> availability, Set<Reserve> reserves, Set<Favorite> favorites, boolean isReserved) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.categories = new HashSet<>();
+        this.rating = rating;
+        this.imagenes = new HashSet<>();
+        this.stock = stock;
+        this.characteristics = new ArrayList<>();
+        this.availability = new HashSet<>();
+        this.reserves = new HashSet<>();
+        this.favorites = new HashSet<>();
+        this.isReserved = isReserved;
+    }
 }
