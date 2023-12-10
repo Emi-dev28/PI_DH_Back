@@ -7,7 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
+
 @Repository
 public interface ProductoRepository extends JpaRepository<Product, Long> {
 
@@ -17,5 +20,12 @@ public interface ProductoRepository extends JpaRepository<Product, Long> {
 
 //    @Query("SELECT p.characteristics FROM Product")
 //    Optional<String> findCharacteristics();
-
+@Query("SELECT DISTINCT p FROM Product p JOIN FETCH p.availability av " +
+        "WHERE (:from IS NULL OR av.fromDate >= :from) " +
+        "AND (:to IS NULL OR av.toDate <= :to) " +
+        "AND (:name IS NULL OR p.name LIKE %:name%)")
+Set<Product> findProductsByAvailabilityBetweenDatesAndName(
+        @Param("from") LocalDate from,
+        @Param("to") LocalDate to,
+        @Param("name") String name);
 }
