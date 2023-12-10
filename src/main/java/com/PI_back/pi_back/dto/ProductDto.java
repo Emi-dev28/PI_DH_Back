@@ -1,10 +1,7 @@
 package com.PI_back.pi_back.dto;
 
 
-import com.PI_back.pi_back.model.Category;
-import com.PI_back.pi_back.model.Characteristic;
-import com.PI_back.pi_back.model.Imagen;
-import com.PI_back.pi_back.model.ProductAvailability;
+import com.PI_back.pi_back.model.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +28,7 @@ public class ProductDto {
     private String description;
     @JsonProperty("price")
     private double price;
-    @JsonProperty("category")
+    @JsonProperty("categories")
     private Set<Category> categories = new HashSet<>();
 
     private Set<Imagen> images = new HashSet<>();
@@ -40,11 +37,15 @@ public class ProductDto {
     @JsonProperty("characteristics")
     private List<Characteristic> characteristics;
     @JsonProperty("availability")
-    private ProductAvailability availability;
+    private Set<ProductAvailability> availability;
+    @JsonProperty("reserves")
+    private Set<Reserve> reserves;
+    @JsonProperty("favorites")
+    private Set<Favorite> favorites;
     @JsonProperty("Reservado")
     private boolean isReserved;
 
-    public ProductDto(String name, String description, double price, Set<Category> categories, Set<Imagen> images, int stock, List<Characteristic> characteristics, ProductAvailability availability, boolean isReserved) {
+    public ProductDto(String name, String description, double price, Set<Category> categories, Set<Imagen> images, int stock, List<Characteristic> characteristics, Set<ProductAvailability> availability, boolean isReserved) {
         this.name = name;
         this.description = description;
         this.price = price;
