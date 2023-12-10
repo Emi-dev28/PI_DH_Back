@@ -1,6 +1,7 @@
 package com.PI_back.pi_back.model;
 
 import com.PI_back.pi_back.utils.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -65,6 +66,15 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
+
+    @Nullable
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "reserves")
+    private Set<Reserve> reserves;
+    @Nullable
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "favorites")
+    private Set<Favorite> favorites;
 
 
     // todo: descomentar las autoridades, eliminar/modificar de la db los usuarios que tienen el rol en null, chequear que el register y el login.
