@@ -6,14 +6,29 @@ import com.PI_back.pi_back.dto.CharacteristicDto;
 import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.model.Category;
 import com.PI_back.pi_back.model.Characteristic;
+import com.PI_back.pi_back.model.Imagen;
 import com.PI_back.pi_back.model.Product;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public interface IProductoService {
     ProductDto productRegistry(Product productDto) throws Exception;
+
     void deleteProduct(Long id);
+
     List<Product> listProduct();
+
+    Set<Imagen> addImage(
+            List<MultipartFile> files,
+            Long id // Este es el id del producto al que se le añade la imagen
+    ) throws IOException;
+
     ProductDto searchById(Long id);
 
     ProductDto removeCategory(Long id, String name);
@@ -31,7 +46,8 @@ public interface IProductoService {
     // Recibe el nombre de la caracteristica y el id del producto al cual se le quiere añadir una caracteristica
     void asignCharacteristicToProduct(Characteristic characteristic, Long id);
 
-//    AvailabilityDto getAvailability(Long id);
 
     ProductDto getProductByName(String name);
+
+Set<Product> filterAvailabilityBetweenProducts(LocalDate from, LocalDate to, String name) throws JsonProcessingException;
 }
