@@ -1,6 +1,5 @@
 package com.PI_back.pi_back.services.impl;
 
-import com.PI_back.pi_back.model.Favorite;
 import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.model.Reserve;
 import com.PI_back.pi_back.model.User;
@@ -38,7 +37,8 @@ public class ReserveServiceimpl implements IReservesService {
     public Reserve addReserve(Long pid, Long uid) {
         User user = userRepository.findById(uid).get();
         Product product = productoRepository.findById(pid).get();
-        Reserve newRes = Reserve.builder(product, user).build();
+        Reserve newRes = Reserve.builder().build();
+        assert user.getReserves() != null;
         user.getReserves().add(newRes);
         return newRes;
     }
@@ -46,6 +46,7 @@ public class ReserveServiceimpl implements IReservesService {
     @Override
     public void deleteReserve(Long pid, Long uid) {
         User user = userRepository.findById(uid).get();
+        assert user.getReserves() != null;
         user.getReserves().remove(productoRepository.findById(pid));
     }
 }

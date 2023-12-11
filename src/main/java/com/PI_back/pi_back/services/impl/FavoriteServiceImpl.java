@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -39,7 +37,8 @@ public class FavoriteServiceImpl implements IFavoriteService {
     public Favorite addFav(Long pid, Long uid) {
         User user = userRepository.findById(uid).get();
         Product product = productoRepository.findById(pid).get();
-        Favorite newFav = Favorite.builder(product, user).build();
+        Favorite newFav = Favorite.builder().build();
+        assert user.getFavorites() != null;
         user.getFavorites().add(newFav);
         return newFav;
     }
@@ -47,6 +46,7 @@ public class FavoriteServiceImpl implements IFavoriteService {
     @Override
     public void deleteFav(Long pid, Long uid) {
         User user = userRepository.findById(uid).get();
+        assert user.getFavorites() != null;
         user.getFavorites().remove(productoRepository.findById(pid));
     }
 }
