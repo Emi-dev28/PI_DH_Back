@@ -42,7 +42,7 @@ public class Category {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL/*, mappedBy = "categories"*/)
     // Le doy la posibilidad de que sea null, para aquellas categorias que se crean sin ningun producto asignado todavia.
-    @JoinColumn(name = "product_fk")
+    @JoinColumn(name = "product_id")
     @Nullable
     @JsonBackReference
     // El set te permite asegurarte que cada item es unico en la lista

@@ -33,13 +33,13 @@ public class ProductoServiceImpl implements IProductoService {
     private final CategoryServiceImpl categoryService;
     private final ProductoRepository productoRepository;
     private UploadServiceImplement uploadService;
-    private ImagenService imagenService;
+    private ImagenServiceImpl imagenService;
     private ObjectMapper objectMapper;
     private CharacteristicImpl characteristicService;
     private ProductAvailabilityRepository availabilityRepository;
 
     @Autowired
-    public ProductoServiceImpl(CategoryServiceImpl categoryService, ProductoRepository productoRepository, UploadServiceImplement uploadService, ImagenService imagenService, ObjectMapper objectMapper, CharacteristicImpl characteristicService, ProductAvailabilityRepository productAvailabilityRepository) {
+    public ProductoServiceImpl(CategoryServiceImpl categoryService, ProductoRepository productoRepository, UploadServiceImplement uploadService, ImagenServiceImpl imagenService, ObjectMapper objectMapper, CharacteristicImpl characteristicService, ProductAvailabilityRepository productAvailabilityRepository) {
         this.categoryService = categoryService;
         this.productoRepository = productoRepository;
         this.uploadService = uploadService;
@@ -147,18 +147,16 @@ public class ProductoServiceImpl implements IProductoService {
 
     @Override
     public Set<Imagen> addImage(
-            List<MultipartFile> files,
-            Long id // Este es el id del producto al que se le añade la imagen
+            List<MultipartFile> files
     ) throws IOException {
-        var product = productoRepository.findById(id).get();
-        var imagenes = product.getImagenes();
+        Set<Imagen> imgs = new HashSet<>();
         for (MultipartFile multipartFile : files) {
             var urlImg = uploadService.uploadFile(multipartFile);
-            var toAdd = Imagen.builder().imageUrl(urlImg).product(product).build();
-            imagenes.add(toAdd);
+            var toAdd = Imagen.builder().imageUrl(urlImg).build();
+            imgs.add(toAdd);
             imagenService.registrarImagen(toAdd);
         }
-        return imagenes;
+        return imgs;
     }
 
     @Override

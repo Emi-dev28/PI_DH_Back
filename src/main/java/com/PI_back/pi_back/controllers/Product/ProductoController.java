@@ -8,6 +8,7 @@ import com.PI_back.pi_back.services.impl.ImagenServiceImpl;
 import com.PI_back.pi_back.services.impl.ProductoServiceImpl;
 import com.PI_back.pi_back.services.impl.UploadServiceImplement;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/productos")
@@ -39,9 +38,21 @@ public class ProductoController {
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
 
     @GetMapping
-    public ResponseEntity<List<com.PI_back.pi_back.model.Product>> listOfProducts() {
+    public ResponseEntity<Set<com.PI_back.pi_back.model.Product>> listOfProducts(
+            @RequestParam(name = "from",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
+            @RequestParam(name = "to",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate to,
+            @RequestParam(name = "name",required = false) String name
+    ) throws JsonProcessingException {
         logger.info("los productos a listar son: {}", productoService.listProduct());
-        return ResponseEntity.ok(productoService.listProduct());
+        Set<Product> productList = new HashSet<>();
+        if(from != null && to != null && name != null){
+            var listFilteredProds = productoService.filterAvailabilityBetweenProducts(from, to, name);
+            productList.addAll(listFilteredProds);
+        }else{
+            ObjectMapper objectMapper = new ObjectMapper();
+
+        }
+        return ResponseEntity.ok(productList);
     }
 
     // Trae producto por nombre. Para el Buscador.
@@ -84,7 +95,7 @@ public class ProductoController {
             @ModelAttribute List<MultipartFile> files,
             @RequestParam Long id
     ) throws IOException {
-        return ResponseEntity.ok(productoService.addImage(files, id));
+        return ResponseEntity.ok(productoService.addImage(files));
     }
 
     @DeleteMapping("/eliminar/{id}")
