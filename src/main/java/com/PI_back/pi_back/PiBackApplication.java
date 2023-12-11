@@ -1,6 +1,5 @@
 package com.PI_back.pi_back;
 
-import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.model.*;
 import com.PI_back.pi_back.utils.JsonPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;

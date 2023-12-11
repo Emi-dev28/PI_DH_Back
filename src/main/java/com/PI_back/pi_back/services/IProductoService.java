@@ -1,6 +1,5 @@
 package com.PI_back.pi_back.services;
 
-import com.PI_back.pi_back.dto.AvailabilityDto;
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.dto.CharacteristicDto;
 import com.PI_back.pi_back.dto.ProductDto;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface IProductoService {

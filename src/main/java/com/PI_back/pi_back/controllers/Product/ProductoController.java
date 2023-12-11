@@ -2,7 +2,10 @@ package com.PI_back.pi_back.controllers.Product;
 
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.dto.ProductDto;
-import com.PI_back.pi_back.model.*;
+import com.PI_back.pi_back.model.Category;
+import com.PI_back.pi_back.model.Characteristic;
+import com.PI_back.pi_back.model.Imagen;
+import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.services.impl.CategoryServiceImpl;
 import com.PI_back.pi_back.services.impl.ImagenServiceImpl;
 import com.PI_back.pi_back.services.impl.ProductoServiceImpl;
@@ -19,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController

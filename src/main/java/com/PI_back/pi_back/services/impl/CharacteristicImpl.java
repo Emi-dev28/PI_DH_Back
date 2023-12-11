@@ -2,7 +2,6 @@ package com.PI_back.pi_back.services.impl;
 
 
 import com.PI_back.pi_back.dto.CharacteristicDto;
-import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.model.Characteristic;
 import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.CharacteristicRepository;
