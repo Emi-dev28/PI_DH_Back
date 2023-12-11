@@ -38,21 +38,11 @@ public class ProductoController {
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
 
     @GetMapping
-    public ResponseEntity<Set<com.PI_back.pi_back.model.Product>> listOfProducts(
-            @RequestParam(name = "from",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
-            @RequestParam(name = "to",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate to,
-            @RequestParam(name = "name",required = false) String name
+    public ResponseEntity<List<com.PI_back.pi_back.model.Product>> listOfProducts(
+
     ) throws JsonProcessingException {
         logger.info("los productos a listar son: {}", productoService.listProduct());
-        Set<Product> productList = new HashSet<>();
-        if(from != null && to != null && name != null){
-            var listFilteredProds = productoService.filterAvailabilityBetweenProducts(from, to, name);
-            productList.addAll(listFilteredProds);
-        }else{
-            ObjectMapper objectMapper = new ObjectMapper();
-
-        }
-        return ResponseEntity.ok(productList);
+        return ResponseEntity.ok(productoService.listProduct());
     }
 
     // Trae producto por nombre. Para el Buscador.

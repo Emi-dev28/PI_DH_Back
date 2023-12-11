@@ -22,8 +22,7 @@ import java.util.*;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIdentityReference(alwaysAsId = true)
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,18 +115,5 @@ public class Product {
                 '}';
     }
 
-    public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, Set<ProductAvailability> availability, Set<Reserve> reserves, Set<Favorite> favorites, boolean isReserved) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.categories = new HashSet<>();
-        this.rating = rating;
-        this.imagenes = new HashSet<>();
-        this.stock = stock;
-        this.characteristics = new ArrayList<>();
-        this.availability = new HashSet<>();
-        this.reserves = new HashSet<>();
-        this.favorites = new HashSet<>();
-        this.isReserved = isReserved;
-    }
+
 }
