@@ -70,10 +70,13 @@ public class User implements UserDetails {
     @Nullable
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(name = "reserves")
+    @JoinColumn(name = "user_id")
     private Set<Reserve> reserves;
+
     @Nullable
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(name = "favorites")
+    @JoinColumn(name = "user_id")
     private Set<Favorite> favorites;
 
 

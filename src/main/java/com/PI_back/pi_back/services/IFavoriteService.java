@@ -1,19 +1,13 @@
 package com.PI_back.pi_back.services;
 
-import com.PI_back.pi_back.dto.FavoriteDto;
 import com.PI_back.pi_back.model.Favorite;
-import com.PI_back.pi_back.repository.FavoriteRepository;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IFavoriteService {
-    List<FavoriteDto> getAllFavs();
+    Set<Favorite> getFavs(Long uid);
 
-    FavoriteDto getOne(Long id);
+    Favorite addFav(Long pid , Long uid);
 
-    FavoriteDto registry(Favorite favorite);
-
-    FavoriteDto update(Long id, Favorite favorite);
-
-    void deleteFav(Long id);
+    void deleteFav(Long id, Long uid);
 }
