@@ -52,9 +52,9 @@ public class UserController {
     public ResponseEntity<Favorite> addNewfavorite(@PathVariable Long uid, @PathVariable Long pid ){
         return ResponseEntity.ok(favoriteServiceImpl.addFav(uid, pid));
     }
-    @DeleteMapping("/delete-reserve/{uid}/{pid}")
-    public void onDeleteReserve(@PathVariable Long uid, @PathVariable Long pid ){
-        reserveServiceimpl.deleteReserve(uid, pid);
+    @DeleteMapping("/delete-reserve/{reserveId}")
+    public void onDeleteReserve(@PathVariable Long reserveId ){
+        reserveServiceimpl.deleteReserve(reserveId);
     }
 
     @DeleteMapping("/delete-favorite/{uid}/{pid}")

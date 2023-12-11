@@ -11,7 +11,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +25,7 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIdentityReference(alwaysAsId = true)
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,10 +91,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ProductAvailability> availability;
 
+    @Nullable
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(name = "reserves")
     private Set<Reserve> reserves;
 
+    @Nullable
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(name = "favorites")
     private Set<Favorite> favorites;
@@ -120,18 +120,5 @@ public class Product {
                 '}';
     }
 
-    public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, Set<ProductAvailability> availability, Set<Reserve> reserves, Set<Favorite> favorites, boolean isReserved) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.categories = new HashSet<>();
-        this.rating = rating;
-        this.imagenes = new HashSet<>();
-        this.stock = stock;
-        this.characteristics = new ArrayList<>();
-        this.availability = new HashSet<>();
-        this.reserves = new HashSet<>();
-        this.favorites = new HashSet<>();
-        this.isReserved = isReserved;
-    }
+
 }

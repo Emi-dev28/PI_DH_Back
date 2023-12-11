@@ -41,7 +41,9 @@ public class ProductoController {
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
 
     @GetMapping
-    public ResponseEntity<List<com.PI_back.pi_back.model.Product>> listOfProducts() {
+    public ResponseEntity<List<com.PI_back.pi_back.model.Product>> listOfProducts(
+
+    ) throws JsonProcessingException {
         logger.info("los productos a listar son: {}", productoService.listProduct());
         return ResponseEntity.ok(productoService.listProduct());
     }
@@ -86,7 +88,7 @@ public class ProductoController {
             @ModelAttribute List<MultipartFile> files,
             @RequestParam Long id
     ) throws IOException {
-        return ResponseEntity.ok(productoService.addImage(files, id));
+        return ResponseEntity.ok(productoService.addImage(files));
     }
 
     @DeleteMapping("/eliminar/{id}")

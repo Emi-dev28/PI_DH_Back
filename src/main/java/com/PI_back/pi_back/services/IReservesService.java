@@ -11,5 +11,5 @@ public interface IReservesService {
     Reserve addReserve(Long pid, Long uid);
 
     // TODO: id de la reserva y id del User
-    void deleteReserve(Long id, Long uid);
+    void deleteReserve(Long reserveId);
 }

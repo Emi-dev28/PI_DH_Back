@@ -23,8 +23,7 @@ public interface IProductoService {
     List<Product> listProduct();
 
     Set<Imagen> addImage(
-            List<MultipartFile> files,
-            Long id // Este es el id del producto al que se le añade la imagen
+            List<MultipartFile> files// Este es el id del producto al que se le añade la imagen
     ) throws IOException;
 
     ProductDto searchById(Long id);
