@@ -54,7 +54,6 @@ public class Product {
                     @JoinColumn(name = "category_id", referencedColumnName = "id")
             }
     )
-    @JsonIgnore
     @JsonProperty("categories")
     private Set<Category> categories;
     @Column(name = "RATING")

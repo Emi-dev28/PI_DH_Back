@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,16 +35,13 @@ public class CategoryServiceImpl implements ICategoryService {
     @Autowired private ImagenServiceImpl imagenService;
     // Sin imagen
     @Override
-    public Category categoryRegistry(Category category) throws Exception {
+    public CategoryDto categoryRegistry(Category category) throws Exception {
         logger.info("Se va a registrar una nueva categoria {}", category);
-        var checkIfPresent = repository.searchByName(category.getName()).isPresent();
-        if(checkIfPresent){
-            logger.error("La nombre de la categoria que se intenta registrar ya se encuentra en base de datos");
-            throw new Exception("La nombre de la categoria que se intenta registrar ya se encuentra en base de datos");
-        }
-        else{
-            return repository.save(category);
-        }
+        var registeredCat = repository.save(category);
+        var categoryDto = CategoryDto.builder()
+                .name(category.getName())
+                .description(category.getDescription()).products(category.getProducts()).build();
+        return categoryDto;
     }
     //Con imagen
 
