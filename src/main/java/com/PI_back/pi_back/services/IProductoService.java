@@ -22,7 +22,7 @@ public interface IProductoService {
 
     void deleteProduct(Long id);
 
-    List<Product> listProduct();
+    List<ProductDto> listProduct();
 
     Set<Imagen> addImage(
             List<MultipartFile> files// Este es el id del producto al que se le añade la imagen

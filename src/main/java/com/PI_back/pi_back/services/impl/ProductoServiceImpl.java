@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -103,8 +104,13 @@ public class ProductoServiceImpl implements IProductoService {
     }
 
     @Override
-    public List<Product> listProduct() {
-        return productoRepository.findAll();
+    public List<ProductDto> listProduct() {
+        var prods = productoRepository.findAll();
+        List<ProductDto> prodsDto = new ArrayList<>();
+        for (Product prod : prods) {
+            prodsDto.add(objectMapper.convertValue(prod, ProductDto.class));
+        }
+        return prodsDto;
     }
 
     public ProductDto registry(
@@ -161,14 +167,8 @@ public class ProductoServiceImpl implements IProductoService {
 
     @Override
     public ProductDto searchById(Long id) {
-        Product productABuscar = productoRepository.findById(id).orElse(null);
-        if (productABuscar != null) {
-            Logger.info("Se encontro el producto con id {}", id);
-        } else {
-            Logger.info("El producto buscado con id {}, no se encuentra en la base de datos", id);
-        }
-        var response = objectMapper.convertValue(productABuscar, ProductDto.class);
-        return response;
+       var prod = productoRepository.findById(id).get();
+        return objectMapper.convertValue(prod,ProductDto.class );
     }
 
     // recibe una category y un id (del producto donde va a guardar la categoria)
