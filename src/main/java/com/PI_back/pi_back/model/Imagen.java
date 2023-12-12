@@ -26,17 +26,12 @@ public class Imagen {
     private Long id;
 
     @Column(name = "imagen_url")
-
     private String imageUrl;
-
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JoinColumn(name = "producto_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
-//    @ManyToOne()
-//    @JoinColumn(name = "files")
+
 
     @OneToOne(mappedBy = "img", cascade = CascadeType.ALL)
     private Category category;

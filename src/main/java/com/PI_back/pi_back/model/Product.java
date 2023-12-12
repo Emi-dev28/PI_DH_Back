@@ -43,10 +43,9 @@ public class Product {
     @Column(name = "PRECIO")
     @NotNull(message = "The price cannot be null ")
     @JsonProperty(value = "price")
-
     private Double price;
     @Column(name = "CATEGORIA")
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "PRODUCT_CATEGORIES",
             joinColumns = {
                     @JoinColumn(name = "product_id", referencedColumnName = "id")
@@ -61,11 +60,12 @@ public class Product {
     @Column(name = "RATING")
     private Double rating;
     //La opción que puede ser útil para la eliminación en cascada es cascade. Esencialmente la cascada nos permite definir qué operación (persistir, fusionar, eliminar) en la entidad padre debe ser aplicada en cascada a las entidades hijas relacionadas.
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true) //Además de utilizar CascadeType.All o CascadeType.remove, es esencial establecer la propiedad orphanRemoval a true para asegurar la correcta eliminación de las entidades huérfanas. Con esta propiedad establecida, JPA elimina automáticamente cualquier entidad huérfana de la base de datos
+    @Column
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true) //Además de utilizar
     @JoinColumn(name = "imagen_id")
-    //@JsonProperty("set_of_images")
-    @JsonIgnore
-    private Set<Imagen> imagenes = new HashSet<>();
+    @JsonManagedReference
+    @Nullable
+    private Set<Imagen> imagenes;
 
     @Column(name = "STOCK")
     @JsonProperty(value = "stock")
@@ -73,27 +73,28 @@ public class Product {
     private Integer stock;
 
     @Column
-    //@JsonProperty(value = "characteristics")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "characteristic_id")
     @JsonManagedReference
     @Nullable
-    // @JsonProperty("set_of_characteristics")
     private List<Characteristic> characteristics;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "product_availability")
     @JsonProperty("product_availability")
     @JsonManagedReference
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_availability_id")
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductAvailability> availability;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(name = "reserves")
+    @JsonProperty("reserves")
     private Set<Reserve> reserves;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(name = "favorites")
+    @JsonProperty("favorites")
     private Set<Favorite> favorites;
     private boolean isReserved;
 
@@ -115,5 +116,19 @@ public class Product {
                 '}';
     }
 
+    public Product(String name, String description, Double price, Set<Category> categories, Double rating, Set<Imagen> imagenes, Integer stock, List<Characteristic> characteristics, Set<ProductAvailability> availability, Set<Reserve> reserves, Set<Favorite> favorites, boolean isReserved) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.categories = new HashSet<>() ;
+        this.rating = rating;
+        this.imagenes = new HashSet<>() ;
+        this.stock = stock;
+        this.characteristics = new ArrayList<>();
+        this.availability = new HashSet<>();
+        this.reserves = new HashSet<>();
+        this.favorites = new HashSet<>();
+        this.isReserved = isReserved;
+    }
 
 }
