@@ -1,6 +1,7 @@
 package com.PI_back.pi_back.model;
 
 import com.PI_back.pi_back.utils.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -63,13 +64,15 @@ public class User implements UserDetails {
     private Set<Token> tokens;
 
     @Nullable
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "reserves")
+    @JsonManagedReference
     private Set<Reserve> reserves;
 
     @Nullable
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "favorites")
+    @JsonManagedReference
     private Set<Favorite> favorites;
 
 

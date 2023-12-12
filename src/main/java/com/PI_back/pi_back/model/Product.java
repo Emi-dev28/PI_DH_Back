@@ -92,17 +92,18 @@ public class Product {
     private Set<ProductAvailability> availability;
 
     @Nullable
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "reserves")
+    @JsonManagedReference
     private Set<Reserve> reserves;
 
     @Nullable
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "favorites")
+    @JsonManagedReference
     private Set<Favorite> favorites;
+
     private boolean isReserved;
-
-
 
     @Override
     public String toString() {
