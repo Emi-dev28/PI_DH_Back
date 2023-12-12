@@ -1,20 +1,16 @@
 package com.PI_back.pi_back.model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.google.gson.annotations.SerializedName;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -90,20 +86,18 @@ public class Product {
     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductAvailability> availability;
 
-
-    @Nullable
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(name = "reserves")
-    @JsonManagedReference
+    @JsonProperty("reserves")
     private Set<Reserve> reserves;
 
-    @Nullable
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(name = "favorites")
-    @JsonManagedReference
+    @JsonProperty("favorites")
     private Set<Favorite> favorites;
-
     private boolean isReserved;
+
+
 
     @Override
     public String toString() {
