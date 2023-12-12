@@ -4,7 +4,6 @@ import com.PI_back.pi_back.controllers.Product.ProductoController;
 import com.PI_back.pi_back.model.User;
 import com.PI_back.pi_back.repository.UserRepository;
 import com.PI_back.pi_back.services.IUserDetailsService;
-
 import com.PI_back.pi_back.utils.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

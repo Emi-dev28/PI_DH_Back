@@ -83,6 +83,8 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .name(user.getFirstname())
                 .lastname(user.getLastname())
                 .rol(user.getRol())
+                .favorites(user.getFavorites())
+                .reserves(user.getReserves())
                 .build();
     }
     @Override
@@ -109,6 +111,8 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .name(user.getFirstname())
                 .lastname(user.getLastname())
                 .rol(user.getRol())
+                .favorites(user.getFavorites())
+                .reserves(user.getReserves())
                 .build();
     }
 
@@ -149,10 +153,12 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
         var users = userRepository.findAll();
         List<UserDto> usersDto = users.stream()
                 .map(user -> new UserDto(
-                        user.getFirstname(),
-                        user.getLastname(),
-                        user.getUsername(),
-                        user.getFirstname() + " " + user.getLastname()))
+                                        user.getFirstname(),
+                                        user.getLastname(),
+                                        user.getUsername(),
+                        user.getFirstname() + " " + user.getLastname(),
+                                        user.getReserves(),
+                        user.getFavorites()))
                 .toList();
         logger.info("lista de usuarios ya authenticados {}", usersDto);
         return usersDto;
@@ -185,6 +191,8 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                         .name(user.getFirstname())
                         .lastname(user.getLastname())
                         .rol(user.getRol())
+                        .favorites(user.getFavorites())
+                        .reserves(user.getReserves())
                         .build();
             }
         }

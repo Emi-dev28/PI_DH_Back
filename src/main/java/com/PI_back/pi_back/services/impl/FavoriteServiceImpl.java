@@ -37,7 +37,7 @@ public class FavoriteServiceImpl implements IFavoriteService {
     public Favorite addFav(Long pid, Long uid) {
         User user = userRepository.findById(uid).get();
         Product product = productoRepository.findById(pid).get();
-        Favorite newFav = Favorite.builder().build();
+        var newFav = Favorite.builder().user(user).product(product).build();
         assert user.getFavorites() != null;
         user.getFavorites().add(newFav);
         return newFav;
