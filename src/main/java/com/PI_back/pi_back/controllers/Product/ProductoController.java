@@ -1,7 +1,6 @@
 package com.PI_back.pi_back.controllers.Product;
 
 import com.PI_back.pi_back.dto.CategoryDto;
-import com.PI_back.pi_back.dto.ImageDto;
 import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.model.Category;
 import com.PI_back.pi_back.model.Characteristic;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;

@@ -35,11 +35,11 @@ public class UserController {
         return ResponseEntity.ok(userServiceImplement.listUsers());
     }
 
-    @PutMapping("/update/{email}")
-    public void updateUser(@PathVariable String email, @RequestBody Role rol){
+    @PutMapping("/update/{email}/{rol}")
+    public void updateUser(@PathVariable String email, @PathVariable Role rol){
         userServiceImplement.updateByEmail(email, rol);
+        ResponseEntity.ok();
     }
-
     @GetMapping("/reserves/{id}")
     public ResponseEntity<Set<Reserve>> listOfReserves(@PathVariable Long id) {return ResponseEntity.ok((reserveServiceimpl.getReserves(id)));}
     @GetMapping("/favorites/{id}")

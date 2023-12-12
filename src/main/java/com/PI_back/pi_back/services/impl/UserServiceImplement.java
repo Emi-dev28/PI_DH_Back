@@ -43,13 +43,6 @@ public class UserServiceImplement implements IUserDetailsService {
     public List<User> listUsers() {
         return userRepository.findAll();
     }
-/*
-    @Override
-    public void updateByEmail(String email, Role rol) {
-        userRepository.changeRole(rol,email);
-        logger.info("Éxito");
-    }
-*/
 
     @Override
     public void updateByEmail(String email, Role rol) {

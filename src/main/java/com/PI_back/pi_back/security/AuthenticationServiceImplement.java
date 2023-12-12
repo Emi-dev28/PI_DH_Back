@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -70,6 +71,8 @@ public class AuthenticationServiceImplement implements IAuthenticationService {
                 .password(passwordEncoder.encode(register.getPassword()))
                 .email(register.getEmail())
                 .terms(register.isTerms())
+                .favorites(new HashSet<>())
+                .reserves(new HashSet<>())
                 .rol(Role.USER) /* Todos los usuarios que se registran, lo hacen con el rol USER */
                 .build();
         var savedUser = userRepository.save(user);
