@@ -124,14 +124,7 @@ public class ProductoServiceImpl implements IProductoService {
         var price = registeredProd.getPrice();
         var availability = registeredProd.getAvailability();
         var categories = registeredProd.getCategories();
-        categories.forEach(category -> {
-            category.setProducts(Set.of(product));
-            try {
-                categoryService.categoryRegistry(category);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+
         var isReserved = registeredProd.isReserved();
         var rating = registeredProd.getRating();
         var imagenes = registeredProd.getImagenes();
