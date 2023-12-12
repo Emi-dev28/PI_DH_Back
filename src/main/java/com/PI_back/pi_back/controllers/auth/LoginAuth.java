@@ -1,5 +1,4 @@
 package com.PI_back.pi_back.controllers.auth;
-
 import com.PI_back.pi_back.dto.AuthenticationRequest;
 import com.PI_back.pi_back.dto.AuthenticationResponse;
 import com.PI_back.pi_back.dto.RegisterRequest;
@@ -14,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
-
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/auth/")
@@ -48,7 +46,7 @@ public class LoginAuth {
         props.put("mail.smtp.auth", "true"); //enable authentication
         props.put("mail.smtp.starttls.enable", "true"); //enable STARTTLS
 
-        jakarta.mail.Session session = Session.getDefaultInstance(props, new Authenticator() {
+        Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override
             protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(userName, password);

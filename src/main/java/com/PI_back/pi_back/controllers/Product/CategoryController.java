@@ -3,7 +3,7 @@ package com.PI_back.pi_back.controllers.Product;
 
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.model.Category;
-
+import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.services.impl.CategoryServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -24,10 +24,15 @@ public class CategoryController {
     private CategoryServiceImpl categoryService;
     private Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
-
+// ***************************************************************************************************
     @GetMapping()
     public ResponseEntity<List<CategoryDto>> listAllCategories(){
+
         return ResponseEntity.ok(categoryService.listAll());
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<CategoryDto> getOne(@PathVariable Long id){
+        return ResponseEntity.ok(categoryService.getById(id));
     }
     @PostMapping("/registrar")
     // todo:
@@ -56,7 +61,13 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.updateCategory(id, category));
     }
 
+    // se el id de la categoria a la que se la va a asignar el producto
+    @PutMapping("/asignar-producto/{id}")
+    public ResponseEntity asignProdToCategory(@PathVariable Long id, @RequestBody Product product){
+        categoryService.asignProdToCat(id, product);
+        return ResponseEntity.ok().build();
 
+    }
 
 
 }

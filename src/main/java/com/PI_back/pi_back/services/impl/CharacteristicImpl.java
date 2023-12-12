@@ -34,6 +34,8 @@ public class CharacteristicImpl implements ICharacteristic {
     @Override
     public CharacteristicDto registerACharacteristic(Characteristic characteristic, Long id) throws Exception {
         var prod = productoService.searchById(id);
+        registry(characteristic);
+        characteristic.setProduct(objectMapper.convertValue(prod, Product.class));
 //        characteristic.setProduct(objectMapper.convertValue(prod,Product.class));
         prod.getCharacteristics().add(characteristic); /* todo : resolver el tema del product_id en null */
         var savedChar = characteristicRepository.save(characteristic);

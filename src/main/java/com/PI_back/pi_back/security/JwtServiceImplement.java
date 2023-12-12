@@ -2,7 +2,6 @@ package com.PI_back.pi_back.security;
 
 import com.PI_back.pi_back.security.auth_Interfaces.JwtService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

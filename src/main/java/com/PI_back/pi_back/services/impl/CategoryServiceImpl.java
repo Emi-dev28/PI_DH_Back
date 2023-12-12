@@ -3,6 +3,7 @@ package com.PI_back.pi_back.services.impl;
 import com.PI_back.pi_back.dto.CategoryDto;
 import com.PI_back.pi_back.model.Category;
 import com.PI_back.pi_back.model.Imagen;
+import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.CategoryRepository;
 import com.PI_back.pi_back.repository.ImagenRepository;
 import com.PI_back.pi_back.services.ICategoryService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -33,16 +35,13 @@ public class CategoryServiceImpl implements ICategoryService {
     @Autowired private ImagenServiceImpl imagenService;
     // Sin imagen
     @Override
-    public Category categoryRegistry(Category category) throws Exception {
+    public CategoryDto categoryRegistry(Category category) throws Exception {
         logger.info("Se va a registrar una nueva categoria {}", category);
-        var checkIfPresent = repository.searchByName(category.getName()).isPresent();
-        if(checkIfPresent){
-            logger.error("La nombre de la categoria que se intenta registrar ya se encuentra en base de datos");
-            throw new Exception("La nombre de la categoria que se intenta registrar ya se encuentra en base de datos");
-        }
-        else{
-            return repository.save(category);
-        }
+        var registeredCat = repository.save(category);
+        var categoryDto = CategoryDto.builder()
+                .name(category.getName())
+                .description(category.getDescription()).products(category.getProducts()).build();
+        return categoryDto;
     }
     //Con imagen
 
@@ -122,6 +121,18 @@ public class CategoryServiceImpl implements ICategoryService {
 
     public CategoryDto findCategoryById(Long id) {
         return objectMapper.convertValue(repository.findById(id), CategoryDto.class);
+    }
+
+    public CategoryDto getById(Long id) {
+        var cat = repository.findById(id).get();
+        return objectMapper.convertValue(cat, CategoryDto.class);
+    }
+
+    public void asignProdToCat(Long id, Product product){
+        var cat = getById(id);
+        cat.setProducts(new HashSet<>());
+        cat.getProducts().add(product);
+        updateCategory(product.getId(),objectMapper.convertValue(cat, Category.class));
     }
     // todo --> metodo update();
 }
