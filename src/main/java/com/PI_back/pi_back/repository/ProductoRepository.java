@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,4 +29,5 @@ Set<Product> findProductsByAvailabilityBetweenDatesAndName(
         @Param("from") LocalDate from,
         @Param("to") LocalDate to,
         @Param("name") String name);
+
 }

@@ -28,6 +28,7 @@ public class PiBackApplication {
         LocalDate localDateTo = LocalDate.of(2024, 1, 10);
         JsonObject jsonObject = new JsonObject();
         ObjectMapper objectMapper = new ObjectMapper();
+
         User user = User.builder()
                 .email("asuaaskomdoa@asdjas.com")
                 .firstname("maos dmasd")
@@ -36,13 +37,16 @@ public class PiBackApplication {
                 .password("as duiansd a")
                 .build();
         Reserve reserve = Reserve.builder().id(1L).user(user).build();
+        Imagen imagen = Imagen.builder()
+                .imageUrl("url.aisdsnadna")
+                .build();
         Product product = Product.builder()
                 .name("producto")
                 .description("una descripcion")
                 .price(10.0)
                 .categories(
-                        Set.of(Category.builder().name("Categoria tal").description("Una descripcion").build()))
-                .imagenes(null)
+                 Set.of(Category.builder().name("Categoria tal").description("Una descripcion").build()))
+                .imagenes(Set.of(imagen))
                 .stock(10)
                 .rating(2.0)
                 .characteristics(List.of(Characteristic.builder().description("Una caracteristica").build()))
@@ -50,6 +54,7 @@ public class PiBackApplication {
                 .favorites(Set.of(Favorite.builder().user(user).build()))
                 .isReserved(false)
                 .build();
+
      /*   ProductDto productDto = ProductDto
                 .builder().name("Un proudcto").description("Una descripcion que deberia superar la cantidad de caracteres de la restriccion").price(10.0).categories(Set.of(Category.builder().name("Una categoria").description("Una descripcionasdnasdnja").build()))
                 .stock(10*//*).characteristics(List.of(Characteristic.builder().description("categoria asndkask").build())).availability(ProductAvailability.builder().fromDate(localDate).toDate(localDateTo).build()).isReserved(true).build();*/
