@@ -5,11 +5,13 @@ import com.PI_back.pi_back.dto.CharacteristicDto;
 import com.PI_back.pi_back.dto.ImageDto;
 import com.PI_back.pi_back.dto.ProductDto;
 import com.PI_back.pi_back.exceptions.ProductNotFoundException;
-import com.PI_back.pi_back.model.*;
+import com.PI_back.pi_back.model.Category;
+import com.PI_back.pi_back.model.Characteristic;
+import com.PI_back.pi_back.model.Imagen;
+import com.PI_back.pi_back.model.Product;
 import com.PI_back.pi_back.repository.ProductAvailabilityRepository;
 import com.PI_back.pi_back.repository.ProductoRepository;
 import com.PI_back.pi_back.services.IProductoService;
-import com.PI_back.pi_back.services.ImagenService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 

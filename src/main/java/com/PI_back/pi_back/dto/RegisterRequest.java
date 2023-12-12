@@ -19,14 +19,12 @@ public class RegisterRequest {
     @NotBlank
     @Size(max = 50)
     private String lastname;
-    @NotBlank
     @Size(max = 50)
     private String username;
     @NotBlank
     private String password;
     @NotBlank
     private String email;
-    @NotBlank
     private boolean terms;
     @NotBlank
     private Role rol;

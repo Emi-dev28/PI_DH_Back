@@ -1,10 +1,10 @@
 package com.PI_back.pi_back.dto;
 
-import com.PI_back.pi_back.model.Imagen;
 import com.PI_back.pi_back.model.Product;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Objects;

@@ -1,6 +1,7 @@
 package com.PI_back.pi_back.model;
 
 import com.PI_back.pi_back.utils.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,13 +12,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "USERS")
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @NotBlank
@@ -47,7 +44,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @NotBlank
     @Size(max = 50)
     @Column(name = "username")
     private String username;
@@ -68,13 +64,15 @@ public class User implements UserDetails {
     private Set<Token> tokens;
 
     @Nullable
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "reserves")
+    @JsonManagedReference
     private Set<Reserve> reserves;
 
     @Nullable
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Column(name = "favorites")
+    @JsonManagedReference
     private Set<Favorite> favorites;
 
 
